@@ -2,7 +2,7 @@ import random
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import CommandHandler, ContextTypes
-from Grabber import application
+from shivu import application
 
 # Dictionary to store different action gift links and emojis
 action_info = {

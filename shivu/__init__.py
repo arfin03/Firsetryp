@@ -18,18 +18,20 @@ LOGGER = logging.getLogger(__name__)
 from shivu.config import Development as Config
 
 
-api_id = Config.api_id
-api_hash = Config.api_hash
-TOKEN = Config.TOKEN
-GROUP_ID = Config.GROUP_ID
-CHARA_CHANNEL_ID = Config.CHARA_CHANNEL_ID 
-mongo_url = Config.mongo_url 
-PHOTO_URL = Config.PHOTO_URL 
-SUPPORT_CHAT = Config.SUPPORT_CHAT 
-UPDATE_CHAT = Config.UPDATE_CHAT
-BOT_USERNAME = Config.BOT_USERNAME 
-sudo_users = Config.sudo_users
-OWNER_ID = Config.OWNER_ID 
+OWNER_ID = '6655070772'
+sudo_users = ["6655070772", "6090374191", "6655070772", "5297949798", "6655070772", "6655070772"]
+GROUP_ID = "-1002059626060"
+TOKEN = "6721869429:AAFQUnBJLuicOoD8w-lknA4_s4fe1bYg6-U"
+mongo_url = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.net/?retryWrites=true&w=majority"
+PHOTO_URL = ["https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg", "https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg"]
+SUPPORT_CHAT = "dark_world_231"
+UPDATE_CHAT = "SUKUNA_UPDATE_CHANNEL"
+BOT_USERNAME = "Dark_waifu_Bot"
+CHARA_CHANNEL_ID = "-1002059626060"
+api_id = "28062766"
+api_hash = "2087f7a333490600faeb42a9c0267406"
+
+
 
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)

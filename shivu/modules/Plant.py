@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQueryHandler
 
 import pymongo
-from Grabber import application, user_collection
+from shivu import application, user_collection
 import time
 from datetime import datetime, timedelta
 

@@ -78,30 +78,68 @@ async def message_counter(update: Update, context: CallbackContext) -> None:
             
             message_counts[chat_id] = 0
             
+RARITY_WEIGHTS = {
+    "⚪️ Common": 12,
+    "🟣 Rare": 0.2,
+    "🟡 Legendary": 4.5,
+    "🟢 Medium": 12,
+    "💮 Special edition": 0.2,
+    "🔮 Limited Edition": 0.1
+}
+
 async def send_image(update: Update, context: CallbackContext) -> None:
     chat_id = update.effective_chat.id
 
     all_characters = list(await collection.find({}).to_list(length=None))
-    
+
     if chat_id not in sent_characters:
         sent_characters[chat_id] = []
 
     if len(sent_characters[chat_id]) == len(all_characters):
         sent_characters[chat_id] = []
 
-    character = random.choice([c for c in all_characters if c['id'] not in sent_characters[chat_id]])
+    if 'available_characters' not in context.user_data:
+        context.user_data['available_characters'] = [
+            c for c in all_characters 
+            if 'id' in c 
+            and c['id'] not in sent_characters.get(chat_id, [])
+            and c.get('rarity') is not None 
+            and c.get('rarity') != '💸 Premium Edition'
+        ]
 
-    sent_characters[chat_id].append(character['id'])
-    last_characters[chat_id] = character
+    available_characters = context.user_data['available_characters']
+
+    # Calculate cumulative weights for rarity categories
+    cumulative_weights = []
+    cumulative_weight = 0
+    for character in available_characters:
+        cumulative_weight += RARITY_WEIGHTS.get(character.get('rarity'), 1)
+        cumulative_weights.append(cumulative_weight)
+
+    # Choose a random available character based on rarity and weights
+    rand = random.uniform(0, cumulative_weight)
+    selected_character = None
+    for i, character in enumerate(available_characters):
+        if rand <= cumulative_weights[i]:
+            selected_character = character
+            break
+
+    if not selected_character:
+        # If no character is selected, choose randomly from all characters
+        selected_character = random.choice(all_characters)
+
+    sent_characters[chat_id].append(selected_character['id'])
+    last_characters[chat_id] = selected_character
 
     if chat_id in first_correct_guesses:
         del first_correct_guesses[chat_id]
 
     await context.bot.send_photo(
         chat_id=chat_id,
-        photo=character['img_url'],
-        caption=f"""A New {character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem""",
-        parse_mode='Markdown')
+        photo=selected_character['img_url'],
+        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem""",
+        parse_mode='Markdown'
+        )
 
 
 async def guess(update: Update, context: CallbackContext) -> None:

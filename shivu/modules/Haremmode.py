@@ -12,6 +12,10 @@ async def back_1_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = query.from_user.id
 
+    if user_id not in active_users:
+        await query.answer("You are not authorized to interact with these buttons.")
+        return
+
     rarities = {character['rarity'] for character in active_users[user_id]['characters']}
     
     buttons = [

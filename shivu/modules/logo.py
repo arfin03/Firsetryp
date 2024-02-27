@@ -263,7 +263,7 @@ async def lego(update, context):
         img = Image.open(io.BytesIO(requests.get(randc).content))
         draw = ImageDraw.Draw(img)
         image_widthz, image_heightz = img.size
-        fnt = glob.glob("./Grabber/LOGO_FONT/*")
+        fnt = glob.glob("./shivu/LOGO_FONT/*")
         randf = random.choice(fnt)
         font = ImageFont.truetype(randf, 120)
         w, h = draw.textsize(text, font=font)
@@ -311,7 +311,7 @@ async def vip_logo_handler(update, context):
             draw = ImageDraw.Draw(img)
             image_widthz, image_heightz = img.size
             
-            randf = random.choice(glob.glob("./Grabber/LOGO_FONT/*"))
+            randf = random.choice(glob.glob("./shivu/LOGO_FONT/*"))
             font = ImageFont.truetype(randf, 120)
             w, h = draw.textsize(text, font=font)
             h += int(h * 0.21)

@@ -5,11 +5,13 @@ import html
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext
 
-from shivu import (application, PHOTO_URL, OWNER_ID,
+from shivu import (application, PHOTO_URL,
                     user_collection, top_global_groups_collection, top_global_groups_collection, 
                     group_user_totals_collection)
 
 from shivu import sudo_users as SUDO_USERS 
+
+OWNER_ID = ["6655070772"]
 
     
 async def global_leaderboard(update: Update, context: CallbackContext) -> None:
@@ -145,7 +147,7 @@ async def send_groups_document(update: Update, context: CallbackContext) -> None
 
 
 application.add_handler(CommandHandler('ctop', ctop, block=False))
-application.add_handler(CommandHandler('stats', stats, block=False))
+application.add_handler(CommandHandler('stats2', stats, block=False))
 application.add_handler(CommandHandler('TopGroups', global_leaderboard, block=False))
 
 application.add_handler(CommandHandler('list', send_users_document, block=False))

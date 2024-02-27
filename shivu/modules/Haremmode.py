@@ -28,6 +28,58 @@ async def back_1_callback(update: Update, context: CallbackContext) -> None:
         reply_markup=reply_markup
     )
 
+async def next_or_back_callback(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    user_id = query.from_user.id
+
+    rarity = query.data.split('_')[1]
+    page = int(query.data.split('_')[2])
+
+    if user_id not in active_users:
+        await query.answer("You are not authorized to interact with these buttons.")
+        return
+
+    user = await user_collection.find_one({'id': user_id})
+
+    if not user or 'characters' not in user:
+        await query.answer("Your list is empty.", show_alert=True)
+        return
+
+    filtered_characters = [
+        character for character in user['characters']
+        if character.get('rarity') == rarity
+    ]
+
+    chunk_size = 10
+    total_pages = (len(filtered_characters) + chunk_size - 1) // chunk_size
+
+    if page == 0:
+        if total_pages > 1:
+            keyboard = [
+                [InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}")],
+                [InlineKeyboardButton("Back", callback_data="back_1")]
+            ]
+        else:
+            keyboard = [
+                [InlineKeyboardButton("Back", callback_data="back_1")]
+            ]
+    elif page == total_pages - 1:
+        keyboard = [
+            [InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")],
+            [InlineKeyboardButton("Back", callback_data="back_1")]
+        ]
+    else:
+        keyboard = [
+            [InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}"),
+             InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")],
+            [InlineKeyboardButton("Back", callback_data="back_1")]
+        ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await query.message.edit_reply_markup(reply_markup)
+
+
 async def rarity2_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     data = query.data
@@ -75,17 +127,18 @@ async def rarity2_callback(update: Update, context: CallbackContext) -> None:
         keyboard = [
             [InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}")],
             [InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")],
-            [InlineKeyboardButton("Back", callback_data="back_1")]  # Back button added here
+            [InlineKeyboardButton("Back", callback_data="back_1")]
         ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
     else:
         # If there's only one page, no need for pagination buttons
         keyboard = [
             [InlineKeyboardButton("Back", callback_data="back_1")]
         ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
     await query.edit_message_caption(caption=message, reply_markup=reply_markup)
+
 
 async def hmode(update: Update, context: CallbackContext) -> None:
     # Assuming user_id can be fetched from update object
@@ -110,7 +163,7 @@ async def hmode(update: Update, context: CallbackContext) -> None:
     # Split buttons into chunks of 2 buttons per row
     button_chunks = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
 
-# Create reply markup with buttons
+    # Create reply markup with buttons
     reply_markup = InlineKeyboardMarkup(button_chunks)
     
     # Store user as active user with relevant session information
@@ -122,11 +175,13 @@ async def hmode(update: Update, context: CallbackContext) -> None:
         reply_markup=reply_markup
     )
 
+
 # Add command handler for /hmode command
 application.add_handler(CommandHandler("hmode", hmode))
 
 # Add callback handler for rarity buttons
 application.add_handler(CallbackQueryHandler(rarity2_callback, pattern=r'^rarity2_'))
 
-# Add callback handler for back button
+# Add callback handler for next, previous, and back buttons
+application.add_handler(CallbackQueryHandler(next_or_back_callback, pattern=r'^(next|prev)_'))
 application.add_handler(CallbackQueryHandler(back_1_callback, pattern=r'^back_1$'))

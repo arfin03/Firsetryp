@@ -3,7 +3,7 @@ from pymongo import ReturnDocument
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup 
 from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
-from Grabber import application, sudo_users, collection, db, user_collection, user_totals_collection, CHARA_CHANNEL_ID
+from shivu import application, sudo_users, collection, db, user_collection, user_totals_collection, CHARA_CHANNEL_ID
 
 rarity_coin_mapping = {
     "⚪ Common": 40,

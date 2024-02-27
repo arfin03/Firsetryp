@@ -36,7 +36,7 @@ api_hash = "2087f7a333490600faeb42a9c0267406"
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)
-db = client['Character_catcher']
+db = lol['Character_catcher']
 collection = db['anime_characters']
 user_totals_collection = db['user_totals_2']
 user_collection = db["user_collection_2"]

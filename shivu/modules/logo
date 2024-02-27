@@ -6,7 +6,7 @@ import random
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
-from Grabber import tbot, application 
+from shivu import tbot, application 
 from telegram.ext import CommandHandler
 
 OWNER_ID = 6655070772

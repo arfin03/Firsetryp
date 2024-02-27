@@ -12,10 +12,6 @@ async def back_1_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = query.from_user.id
 
-    if user_id not in active_users:
-        await query.answer("You are not authorized to interact with these buttons.")
-        return
-
     rarities = {character['rarity'] for character in active_users[user_id]['characters']}
     
     buttons = [
@@ -36,8 +32,10 @@ async def next_or_back_callback(update: Update, context: CallbackContext) -> Non
     query = update.callback_query
     user_id = query.from_user.id
 
-    rarity = query.data.split('_')[1]
-    page = int(query.data.split('_')[2])
+    parts = query.data.split('_')
+    action = parts[0]
+    rarity = parts[1]
+    page = int(parts[2])
 
     if user_id not in active_users:
         await query.answer("You are not authorized to interact with these buttons.")
@@ -57,31 +55,31 @@ async def next_or_back_callback(update: Update, context: CallbackContext) -> Non
     chunk_size = 10
     total_pages = (len(filtered_characters) + chunk_size - 1) // chunk_size
 
+    if action == 'next':
+        page = min(page + 1, total_pages - 1)
+    elif action == 'prev':
+        page = max(page - 1, 0)
+
+    current_characters = filtered_characters[page * chunk_size: (page + 1) * chunk_size]
+
+    message = '\n'.join([f"🆔 ID: {char['id']}\n🎗️ Rarity: {char['rarity']}\n👁️‍🗨️ Character: {char['name']}\n\n " for char in current_characters])
+
+    keyboard = []
+
     if page == 0:
-        if total_pages > 1:
-            keyboard = [
-                [InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}")],
-                [InlineKeyboardButton("Back", callback_data="back_1")]
-            ]
-        else:
-            keyboard = [
-                [InlineKeyboardButton("Back", callback_data="back_1")]
-            ]
+        if len(filtered_characters) > chunk_size:
+            keyboard.append([InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}")])
     elif page == total_pages - 1:
-        keyboard = [
-            [InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")],
-            [InlineKeyboardButton("Back", callback_data="back_1")]
-        ]
+        keyboard.append([InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")])
     else:
-        keyboard = [
-            [InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}"),
-             InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")],
-            [InlineKeyboardButton("Back", callback_data="back_1")]
-        ]
+        keyboard.append([InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}"),
+                         InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")])
+
+    keyboard.append([InlineKeyboardButton("Back", callback_data="back_1")])
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await query.message.edit_reply_markup(reply_markup)
+    await query.message.edit_caption(caption=message, reply_markup=reply_markup)
 
 
 async def rarity2_callback(update: Update, context: CallbackContext) -> None:
@@ -127,17 +125,13 @@ async def rarity2_callback(update: Update, context: CallbackContext) -> None:
 
     message = '\n'.join([f"🆔 ID: {char['id']}\n🎗️ Rarity: {char['rarity']}\n👁️‍🗨️ Character: {char['name']}\n\n " for char in current_characters])
 
+    keyboard = []
+
     if total_pages > 1:
-        keyboard = [
-            [InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}")],
-            [InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")],
-            [InlineKeyboardButton("Back", callback_data="back_1")]
-        ]
+        keyboard.append([InlineKeyboardButton("Next", callback_data=f"next_{rarity}_{page+1}")])
+        keyboard.append([InlineKeyboardButton("Previous", callback_data=f"prev_{rarity}_{page-1}")])
     else:
-        # If there's only one page, no need for pagination buttons
-        keyboard = [
-            [InlineKeyboardButton("Back", callback_data="back_1")]
-        ]
+        keyboard.append([InlineKeyboardButton("Back", callback_data="back_1")])
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 

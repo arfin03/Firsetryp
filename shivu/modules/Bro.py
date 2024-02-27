@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext
-from Grabber import application
+from shivu import application
 
 # Define the command callback function as async
 async def set_pic(update: Update, context: CallbackContext) -> None:

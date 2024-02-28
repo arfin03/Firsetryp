@@ -2,13 +2,13 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Assuming you have necessary functions defined elsewhere
-from shivu import user_collection
+from shivu import user_collection, shivuu
 
 # Initialize active_users dictionary
 active_users = {}
 
 # Initialize your Pyrogram client
-app = Client("my_bot")
+app = shivuu
 
 @app.on_message(filters.command("hmode"))
 async def hmode(client, message):

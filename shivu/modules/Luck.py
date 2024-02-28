@@ -12,7 +12,10 @@ async def luck(update: Update, context: CallbackContext):
     
     # Extract the coin amount from the command
     try:
-        amount = int(context.args[0])
+        if len(context.args) == 1:
+            amount = int(context.args[0])
+        else:
+            amount = int(context.args[1])
     except (IndexError, ValueError):
         await update.message.reply_text("Please use the command in the format /luck <coin>")
         return
@@ -31,11 +34,8 @@ async def luck(update: Update, context: CallbackContext):
         await update.message.reply_text("Sorry, you don't have enough coins to place this bet.")
         return
     
-    # Assign a random number between 1 and 3 to the user's bet
-    chosen_number = random.randint(1, 3)
-    
     # Store user's bet
-    user_bets[user_id] = {'amount': amount, 'chosen_number': chosen_number}
+    user_bets[user_id] = amount
     
     # Create the keyboard
     keyboard = [
@@ -47,8 +47,7 @@ async def luck(update: Update, context: CallbackContext):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
-    await update.message.reply_text(f"Your bet: {amount} coins. Try your luck by choosing a number!", reply_markup=reply_markup)
-
+    await update.message.reply_text("Try your luck!", reply_markup=reply_markup)
 
 # Function to handle button 1 click
 async def button_1(update: Update, context: CallbackContext):

@@ -35,6 +35,11 @@ async def pay(update, context):
         await update.message.reply_text("Invalid amount. Usage: /pay <amount>")
         return
 
+    # Check if the amount is positive
+    if amount <= 0:
+        await update.message.reply_text("Amount must be a positive number.")
+        return
+
     # Check if the sender has enough balance
     sender_balance = await user_collection.find_one({'id': sender_id}, projection={'balance': 1})
     if not sender_balance or sender_balance.get('balance', 0) < amount:
@@ -54,26 +59,6 @@ async def pay(update, context):
 
     # Trigger /balance command for the sender
     await context.bot.send_message(chat_id=update.message.chat_id, text='/balance', reply_to_message_id=update.message.message_id)
-
-async def mtop(update, context):
-    # Retrieve the top 10 users with the highest balance
-    top_users = await user_collection.find({}, projection={'id': 1, 'first_name': 1, 'last_name': 1, 'balance': 1}).sort('balance', -1).limit(10).to_list(10)
-
-    # Create a message with the top users
-    top_users_message = "Top 10 Users with Highest Balance:\n"
-    for i, user in enumerate(top_users, start=1):
-        first_name = user.get('first_name', 'Unknown')
-        last_name = user.get('last_name', '')
-        user_id = user.get('id', 'Unknown')
-
-        # Concatenate first_name and last_name if last_name is available
-        full_name = f"{first_name} {last_name}" if last_name else first_name
-
-        top_users_message += f"{i}. <a href='tg://user?id={user_id}'>{full_name}</a>, \n Balance: 💵{user.get('balance', 0)} coins\n\n"
-
-    # Send the photo and include the top_users_message in the caption
-    photo_path = 'https://telegra.ph/file/8fce79d744297133b79b6.jpg'
-    await update.message.reply_photo(photo=photo_path, caption=top_users_message, parse_mode='HTML')
 
 from datetime import datetime, timedelta
 

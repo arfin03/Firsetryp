@@ -1,11 +1,11 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from shivu import Grabberu
+from shivu import shivuu
 from shivu.utils.fonts import Fonts
 
 
-@Grabberu.on_message(filters.command(["font", "fonts"]))
+@shivuu.on_message(filters.command(["font", "fonts"]))
 async def style_buttons(c, m, cb=False):
     buttons = [
         [
@@ -56,7 +56,7 @@ async def style_buttons(c, m, cb=False):
         await m.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
 
 
-@Grabberu.on_callback_query(filters.regex("^nxt"))
+@shivuu.on_callback_query(filters.regex("^nxt"))
 async def nxt(c, m):
     if m.data == "nxt":
         buttons = [
@@ -98,7 +98,7 @@ async def nxt(c, m):
         await style_buttons(c, m, cb=True)
 
 
-@Grabberu.on_callback_query(filters.regex("^style"))
+@shivuu.on_callback_query(filters.regex("^style"))
 async def style(c, m):
     await m.answer()
     cmd, style = m.data.split("+")

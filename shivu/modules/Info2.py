@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackQueryHandler
-from Grabber import collection, user_collection, application
+from shivu import collection, user_collection, application
 
 async def info_character(update, context):
     # Parse character ID from the command

@@ -40,7 +40,7 @@ async def check_character(update: Update, context: CallbackContext) -> None:
 
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext
-from Grabber import collection, user_collection, application
+from shivu import collection, user_collection, application
 
 # Set the owner's user ID
 OWNER_ID = 6069337486  # Replace with the actual owner's user ID

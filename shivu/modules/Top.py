@@ -17,7 +17,7 @@ async def top(update: Update, context: CallbackContext):
             character_count = len(user.get('characters', []))
             first_name = user.get('first_name', 'Unknown')
             userid = user.get('id')
-            user_link = f"https://t.me/{userid}" if username else None
+            user_link = f"https://t.me/{userid}" if userid else None
             if user_link:
                 message += f"{idx}. <a href='{user_link}'>{first_name}</a>: {character_count}\n"
             else:

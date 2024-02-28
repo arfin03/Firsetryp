@@ -17,12 +17,18 @@ async def top(update: Update, context: CallbackContext):
             character_count = len(user.get('characters', []))
             first_name = user.get('first_name', 'Unknown')
             userid = user.get('id')
-            user_link = f"https://t.me/{userid}" if userid else None
-            if user_link:
-                message += f"{idx}. <a href='{user_link}'>{first_name}</a>: {character_count}\n"
+            username = user.get('username')
+
+            if username:
+                user_link = f'<a href="https://t.me/{username}">{first_name}</a>'
+            elif userid:
+                user_link = f'<a href="https://t.me/{userid}">{first_name}</a>'
             else:
-                message += f"{idx}. {first_name}: {character_count}\n"
-        
+                user_link = f'<b>{first_name}</b>'
+
+            message += f"{idx}. {user_link}: {character_count}\n"
+
+        # Send the message along with the image
         await update.message.reply_photo(photo=image_url, caption=message, parse_mode='HTML')
     else:
         await update.message.reply_text("No users found.")

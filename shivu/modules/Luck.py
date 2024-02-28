@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 import random
 import asyncio
-from Grabber import application, user_collection  # Assuming Grabber is your module/package
+from shivu import application, user_collection  # Assuming Grabber is your module/package
 
 user_bets = {}
 

@@ -1,8 +1,8 @@
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from Grabber import Grabberu
-from Grabber.utils.fonts import Fonts
+from shivu import Grabberu
+from shivu.utils.fonts import Fonts
 
 
 @Grabberu.on_message(filters.command(["font", "fonts"]))

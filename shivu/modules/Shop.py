@@ -1,7 +1,8 @@
 import logging
 from shivu import collection, user_collection, shivuu
-from pyrogram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-from pyrogram.types import Update, CallbackContext
+from pyrogram.types import CallbackContext, InputMediaPhoto
+
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 
 application = shivuu
 

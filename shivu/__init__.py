@@ -31,7 +31,15 @@ CHARA_CHANNEL_ID = "-1002059626060"
 api_id = "28062766"
 api_hash = "2087f7a333490600faeb42a9c0267406"
 
-
+image_urls = [
+    "https://telegra.ph/file/405ee89d4a708d161a41b.jpg",
+    "https://telegra.ph/file/a80fae6bc9a09d4bc8cb4.jpg",
+    "https://telegra.ph/file/002d4caee6e74370848c0.jpg",
+    "https://telegra.ph/file/48b536de686bb20e3068b.jpg",
+    "https://telegra.ph/file/a986e00083dae9ad32269.jpg",
+    "https://telegra.ph/file/ba318dc0749b495b434b3.jpg",
+    "https://telegra.ph/file/badce7884ce06e92cedb5.jpg"
+]
 
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)

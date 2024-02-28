@@ -3,13 +3,13 @@ from telegram.ext import Updater, CommandHandler, CallbackContext
 import re
 from shivu import application
 
-def math(update: Update, context: CallbackContext):
+async def math(update: Update, context: CallbackContext):
     # Extract the command arguments
     args = context.args
     
     # Check if the user provided the correct number of arguments
     if len(args) != 3:
-        update.message.reply_text("Please provide the command in the format /math <number> <operator> <number>")
+        await update.message.reply_text("Please provide the command in the format /math <number> <operator> <number>")
         return
     
     # Extract the numbers and operator
@@ -17,7 +17,7 @@ def math(update: Update, context: CallbackContext):
     
     # Check if the numbers are valid
     if not (num1.isdigit() and num2.isdigit()):
-        update.message.reply_text("Please provide valid numbers.")
+        await update.message.reply_text("Please provide valid numbers.")
         return
     
     num1 = float(num1)
@@ -32,14 +32,14 @@ def math(update: Update, context: CallbackContext):
         result = num1 * num2
     elif operator == '/':
         if num2 == 0:
-            update.message.reply_text("Cannot divide by zero.")
+            await update.message.reply_text("Cannot divide by zero.")
             return
         result = num1 / num2
     else:
-        update.message.reply_text("Invalid operator. Please use one of +, -, *, /")
+        await update.message.reply_text("Invalid operator. Please use one of +, -, *, /")
         return
     
-    update.message.reply_text(f"Result: {result}")
+    await update.message.reply_text(f"Result: {result}")
 
 
 application.add_handler(CommandHandler("math", math))

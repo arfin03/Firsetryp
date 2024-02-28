@@ -12,19 +12,27 @@ async def top(update: Update, context: CallbackContext):
     top_users = sorted(users, key=lambda user: len(user.get('characters', [])), reverse=True)[:10]
 
     if top_users:
-        # Randomly select an image URL
-        image_url = random.choice(image_urls)
-
         # Generate the message
         message = "<b>Top 10 Users by Number of Characters:</b>\n\n"
         for idx, user in enumerate(top_users, start=1):
             character_count = len(user.get('characters', []))
-            username = user.get('username', 'Unknown')
-            user_link = f'<a href="tg://user?id={user["_id"]}">{username}</a>'
+            
+            # Fetch user profile details from the database based on ID (user["_id"])
+            # Replace this line with your actual code to fetch user profile details
+            user_profile = await fetch_user_profile(user["_id"])
+            
+            # If user profile is found, get the username
+            if user_profile:
+                username = user_profile.get('username', 'Unknown')
+                user_link = f'<a href="tg://user?id={user["_id"]}">{username}</a>'
+            else:
+                # If user profile is not found, use a placeholder
+                user_link = "Unknown User"
+            
             message += f"{idx}. {user_link}: {character_count}\n"
 
-        # Send the message along with the image
-        await update.message.reply_photo(photo=image_url, caption=message, parse_mode='HTML')
+        # Send the message
+        await update.message.reply_text(message, parse_mode='HTML')
     else:
         await update.message.reply_text("No users found.")
 

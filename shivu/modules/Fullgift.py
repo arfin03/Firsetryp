@@ -6,7 +6,7 @@ from shivu import user_collection, shivuu
 pending_trades = {}
 pending_gifts = {}
 
-@shivuu.on_message(filters.command("fullgift"))
+@shivuu.on_message(filters.command("giftall"))
 async def fullgift(client, message):
     sender_id = message.from_user.id
 

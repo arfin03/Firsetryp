@@ -6,7 +6,7 @@ import random
 
 
 async def top(update: Update, context: CallbackContext):
-    users = await user_collection.find().to_list(length=None)
+ users = await user_collection.find().to_list(length=None)
 
     top_users = sorted(users, key=lambda user: len(user.get('characters', [])), reverse=True)[:10]
 

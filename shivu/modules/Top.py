@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext
 from urllib.parse import quote_plus
-from Grabber import user_collection, application, image_urls
+from shivu import user_collection, application, image_urls
 import random
 
 async def top(update: Update, context: CallbackContext):

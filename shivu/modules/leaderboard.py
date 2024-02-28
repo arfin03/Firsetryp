@@ -41,26 +41,25 @@ async def ctop(update: Update, context: CallbackContext) -> None:
     await update.message.reply_photo(photo=photo_url, caption=leaderboard_message, parse_mode='HTML')
 
 
-async def leaderboard(update: Update, context: CallbackContext) -> None:
+async def global_leaderboard(update: Update, context: CallbackContext) -> None:
     
-    cursor = user_collection.aggregate([
-        {"$project": {"username": 1, "first_name": 1, "character_count": {"$size": "$characters"}}},
-        {"$sort": {"character_count": -1}},
+    cursor = top_global_groups_collection.aggregate([
+        {"$project": {"group_name": 1, "count": 1}},
+        {"$sort": {"count": -1}},
         {"$limit": 10}
     ])
+    leaderboard_data = await cursor.to_list(length=10)
 
-    leaderboard_data = await cursor.to_list(10)  # This line should be awaited
+    leaderboard_message = "<b>TOP 10 GROUPS WHO GUESSED MOST CHARACTERS</b>\n\n"
 
-    leaderboard_message = "<b>TOP 10 USERS WITH MOST CHARACTERS</b>\n\n"
+    for i, group in enumerate(leaderboard_data, start=1):
+        group_name = html.escape(group.get('group_name', 'Unknown'))
 
-    for i, user in enumerate(leaderboard_data, start=1):
-        username = user.get('username', 'Unknown')
-        first_name = html.escape(user.get('first_name', 'Unknown'))
-
-        if len(first_name) > 10:
-            first_name = first_name[:15] + '...'
-        character_count = user['character_count']
-        leaderboard_message += f'{i}. <a href="https://t.me/{username}"><b>{first_name}</b></a> ➾ <b>{character_count}</b>\n'
+        if len(group_name) > 10:
+            group_name = group_name[:15] + '...'
+        count = group['count']
+        leaderboard_message += f'{i}. <b>{group_name}</b> ➾ <b>{count}</b>\n'
+    
     
     photo_url = random.choice(PHOTO_URL)
 

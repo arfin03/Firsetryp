@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
 import re
-from Grabber import application
+from shivu import application
 
 def math(update: Update, context: CallbackContext):
     # Extract the command arguments

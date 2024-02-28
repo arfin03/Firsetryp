@@ -12,12 +12,13 @@ async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if not rarity_3_characters:
-        await update.effective_message.reply_text("No legendary characters available in the shop.")
+        await context.bot.send_message(update.message.chat_id, "No legendary characters available in the shop.")
         return
         
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
-    message = await update.effective_message.reply_photo(
+    message = await context.bot.send_photo(
+        chat_id=update.message.chat_id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                 f"🏮Anime Name: {first_character['anime']}\n"

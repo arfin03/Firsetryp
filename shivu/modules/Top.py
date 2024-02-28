@@ -4,6 +4,11 @@ from urllib.parse import quote_plus
 from shivu import user_collection, application, image_urls
 import random
 
+async def fetch_user_profile(user_id):
+    # Fetch user profile from the database based on user_id
+    user_profile = await user_collection.find_one({'_id': user_id})
+    return user_profile
+
 async def top(update: Update, context: CallbackContext):
     # Retrieve users along with their character counts
     users = await user_collection.find().to_list(length=None)

@@ -49,12 +49,22 @@ async def luck(update: Update, context: CallbackContext):
     
     await update.message.reply_text("Try your luck!", reply_markup=reply_markup)
 
-# Function to handle button clicks
-# Function to handle button clicks
-async def button(update: Update, context: CallbackContext):
+# Function to handle button 1 click
+async def button_1(update: Update, context: CallbackContext):
+    await button(update, context, 1)
+
+# Function to handle button 2 click
+async def button_2(update: Update, context: CallbackContext):
+    await button(update, context, 2)
+
+# Function to handle button 3 click
+async def button_3(update: Update, context: CallbackContext):
+    await button(update, context, 3)
+
+# Function to handle common button click logic
+async def button(update: Update, context: CallbackContext, chosen_number: int):
     query = update.callback_query
     user_id = query.from_user.id
-    chosen_number = int(query.data)
     
     # Retrieve user's bet
     bet_amount = user_bets.get(user_id)
@@ -84,14 +94,14 @@ async def button(update: Update, context: CallbackContext):
     await asyncio.sleep(1)
     await query.message.delete()
 
-
-
-
-
 # Define handlers
 luck_handler = CommandHandler('luck', luck)
-button_handler = CallbackQueryHandler(button)
+button_1_handler = CallbackQueryHandler(button_1, pattern='^1$')
+button_2_handler = CallbackQueryHandler(button_2, pattern='^2$')
+button_3_handler = CallbackQueryHandler(button_3, pattern='^3$')
 
 # Add handlers to the dispatcher
 application.add_handler(luck_handler)
-application.add_handler(button_handler)
+application.add_handler(button_1_handler)
+application.add_handler(button_2_handler)
+application.add_handler(button_3_handler)

@@ -1,6 +1,6 @@
 import logging
 from shivu import collection, user_collection, shivuu
-from pyrogram.types import CallbackContext, InputMediaPhoto
+from pyrogram.types import InputMediaPhoto
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler 

@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
-from Grabber import collection, user_collection, application, shivuu
+from shivu import collection, user_collection, application, shivuu
 import logging
 
 app = shivuu

@@ -19,7 +19,7 @@ from shivu.config import Development as Config
 
 
 OWNER_ID = '6655070772'
-sudo_users = ["6655070772", "6090374191", "6655070772", "5297949798", "6655070772", "6655070772"]
+sudo_users = ["6655070772", "6090374191", "6655070772", "5297949798", "6655070772", "5955023340"]
 GROUP_ID = "-1002059626060"
 TOKEN = "6786511875:AAGwdbsrJFgG0HmNnDglbMeAcpAJV4KMG0s"
 mongo_url = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.net/?retryWrites=true&w=majority"

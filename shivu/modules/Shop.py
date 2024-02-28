@@ -1,7 +1,9 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-from shivu import collection, user_collection, application
 import logging
+from shivu import collection, user_collection, shivuu
+from pyrogram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+from pyrogram.types import Update, CallbackContext
+
+application = shivuu
 
 async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -13,7 +15,7 @@ async def shop(update: Update, context: CallbackContext) -> None:
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
     message = await context.bot.send_photo(
-        update.message.chat_id,
+        update.message.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                 f"🏮Anime Name: {first_character['anime']}\n"
@@ -50,7 +52,7 @@ async def next_character(update: Update, context: CallbackContext) -> None:
 
         # Update the existing message with details of the next character
         await context.bot.edit_message_media(
-            chat_id=update.callback_query.message.chat_id,
+            chat_id=update.callback_query.message.chat.id,
             message_id=user_data['message_id'],
             media=InputMediaPhoto(media=next_character['img_url'], caption=caption),
             reply_markup=reply_markup
@@ -67,7 +69,7 @@ async def close_shop(update: Update, context: CallbackContext) -> None:
     message_id = user_data.get('message_id')
     if message_id:
         try:
-            await context.bot.delete_message(chat_id=update.callback_query.message.chat_id, message_id=message_id)
+            await context.bot.delete_message(chat_id=update.callback_query.message.chat.id, message_id=message_id)
         except Exception as e:
             logging.error(f"Error deleting message: {e}")
 
@@ -146,27 +148,6 @@ async def buy_character(update: Update, context: CallbackContext) -> None:
 
     await query.answer(f"You have successfully bought {character['name']} for {coin_price} coins!")
 
-def get_inline_keyboard(character, current_index=0, total_count=7):
-    keyboard = []
-
-    if current_index == 0:
-        # For the first character, display "CLOSED" and "NEXT" buttons
-        keyboard.append([
-            InlineKeyboardButton("❎𝘾𝙇𝙊𝙎𝙀𝘿❎", callback_data="shop:closed"),
-            InlineKeyboardButton("➡️𝙉𝙀𝙓𝙏➡️", callback_data=f"shop_next_{current_index + 1}")
-        ])
-    else:
-        # For all other characters, display both "BACK" and "NEXT" buttons
-        keyboard.append([
-            InlineKeyboardButton(" ⬅️𝘽𝘼𝘾𝙆⬅️", callback_data="shop:back"),
-            InlineKeyboardButton("➡️𝙉𝙀𝙓𝙏➡️", callback_data=f"shop_next_{current_index + 1}")
-        ])
-
-    # Add "Buy" button for all characters
-    keyboard.append([InlineKeyboardButton("✅𝘽𝙐𝙔✅", callback_data=f"buy:{character['id']}")])
-
-    return InlineKeyboardMarkup(keyboard)
-
 async def previous_character(update: Update, context: CallbackContext) -> None:
     user_data = context.user_data.get('shop_message')
     if user_data is None:
@@ -191,7 +172,7 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
 
         # Update the existing message with details of the previous character
         await context.bot.edit_message_media(
-            chat_id=update.callback_query.message.chat_id,
+            chat_id=update.callback_query.message.chat.id,
             message_id=user_data['message_id'],
             media=InputMediaPhoto(media=previous_character['img_url'], caption=caption),
             reply_markup=reply_markup
@@ -200,11 +181,27 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-
 # Add a handler for the 'closed' button
-application.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-application.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-application.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-application.add_handler(CommandHandler("shop", shop, block=False))
-application.add_handler(CommandHandler("set", set_price, block=False))
-application.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
+@application.on_message()
+async def shop_command(update: Update, context: CallbackContext):
+    await shop(update, context)
+
+@application.on_message()
+async def set_command(update: Update, context: CallbackContext):
+    await set_price(update, context)
+
+@application.on_callback_query()
+async def buy_callback(client, query):
+    await buy_character(client, query)
+
+@application.on_callback_query()
+async def close_callback(client, query):
+    await close_shop(client, query)
+
+@application.on_callback_query()
+async def back_callback(client, query):
+    await previous_character(client, query)
+
+@application.on_callback_query()
+async def next_callback(client, query):
+    await next_character(client, query)

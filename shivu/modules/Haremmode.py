@@ -142,19 +142,17 @@ async def next_or_back_callback(client, callback_query):
 
 @app.on_callback_query(filters.regex('^back_1$'))
 async def back_1_callback(client, callback_query):
-    query = update.callback_query
+    query = callback_query
     user_id = query.from_user.id
 
     rarities = {character['rarity'] for character in active_users[user_id]['characters']}
     
     buttons = [
-        InlineKeyboardButton(rarity, callback_data=f'rarity2_{rarity}')
+        [InlineKeyboardButton(rarity, callback_data=f'rarity2_{rarity}')]
         for rarity in rarities
     ]
     
-    button_chunks = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
-    
-    reply_markup = InlineKeyboardMarkup(button_chunks)
+    reply_markup = InlineKeyboardMarkup(buttons)
     
     await query.edit_message_media(
         media=InputMediaPhoto("https://telegra.ph/file/036135b624b6a7d1babee.jpg"),

@@ -155,7 +155,8 @@ async def back_1_callback(client, callback_query):
     reply_markup = InlineKeyboardMarkup(buttons)
     
     await query.edit_message_media(
-        media="https://telegra.ph/file/036135b624b6a7d1babee.jpg",
+        media=InputMediaPhoto("https://telegra.ph/file/036135b624b6a7d1babee.jpg"),
         reply_markup=reply_markup
     )
+
 

@@ -3,6 +3,8 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from shivu import user_collection, shivuu
 
+pending_trades = {}
+pending_gifts = {}
 
 @shivuu.on_message(filters.command("fullgift"))
 async def fullgift(client, message):

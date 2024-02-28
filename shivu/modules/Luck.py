@@ -35,8 +35,8 @@ async def luck(update: Update, context: CallbackContext):
         return
 
     if amount < 0:
-        await update.message.reply_text("sorry ! I can't understand")
-        return
+        await update.message.reply_text("Sorry! I can't understand")
+        return
     
     # Store user's bet
     user_bets[user_id] = amount

@@ -17,8 +17,7 @@ async def shop(update: Update, context: CallbackContext) -> None:
         
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
-    message = await context.bot.send_photo(
-        update.message.chat.id,
+    message = await update.message.reply_photo(
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                 f"🏮Anime Name: {first_character['anime']}\n"

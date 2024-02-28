@@ -72,7 +72,8 @@ async def leaderboard(update: Update, context: CallbackContext) -> None:
         {"$sort": {"character_count": -1}},
         {"$limit": 10}
     ])
-    leaderboard_data = await cursor.to_list(length=10)
+
+    leaderboard_data = await cursor.to_list(10)
 
     leaderboard_message = "<b>TOP 10 USERS WITH MOST CHARACTERS</b>\n\n"
 
@@ -88,7 +89,6 @@ async def leaderboard(update: Update, context: CallbackContext) -> None:
     photo_url = random.choice(PHOTO_URL)
 
     await update.message.reply_photo(photo=photo_url, caption=leaderboard_message, parse_mode='HTML')
-
 
 
 

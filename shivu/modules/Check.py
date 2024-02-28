@@ -5,7 +5,7 @@ from pymongo import ReturnDocument
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext
 
-from Grabber import application, sudo_users, collection, db, CHARA_CHANNEL_ID
+from shivu import application, sudo_users, collection, db, CHARA_CHANNEL_ID
 
 async def check_character(update: Update, context: CallbackContext) -> None:
     try:

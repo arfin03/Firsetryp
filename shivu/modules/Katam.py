@@ -1,7 +1,7 @@
 from telegram import Update
 import asyncio
 from telegram.ext import CommandHandler, CallbackContext
-from Grabber import user_collection, application 
+from shivu import user_collection, application 
 
 OWNER_ID = 6655070772
 

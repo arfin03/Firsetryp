@@ -159,8 +159,7 @@ async def claim_reward(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("You don't have a plant.")
 
-# Function to handle /top command
-def top_plant_levels(update: Update, context: CallbackContext):
+async def top_plant_levels(update: Update, context: CallbackContext):
     # Retrieve plant data for multiple users
     top_users_cursor = collection.find().sort("level", pymongo.DESCENDING).limit(10)
     
@@ -177,13 +176,14 @@ def top_plant_levels(update: Update, context: CallbackContext):
     async def process_all_users():
         await asyncio.gather(*[process_user_data(user_data) async for user_data in top_users_cursor])
 
-    async def send_message():
-        if top_users_info:
-            message = "\n".join(top_users_info)
-            pic = "https://telegra.ph/file/f466f1fdab10ab5a0fc11.jpg"
-            await update.message.reply_photo(photo=pic, caption=f"Top 10 Users by Plant Level:\n\n{message}", parse_mode="HTML")
-        else:
-            await update.message.reply_text("No users found.")
+    await process_all_users()
+
+    if top_users_info:
+        message = "\n".join(top_users_info)
+        pic = "https://telegra.ph/file/f466f1fdab10ab5a0fc11.jpg"
+        await update.message.reply_photo(photo=pic, caption=f"Top 10 Users by Plant Level:\n\n{message}", parse_mode="HTML")
+    else:
+        await update.message.reply_text("No users found.")
     
     asyncio.run(process_all_users())
     asyncio.run(send_message())

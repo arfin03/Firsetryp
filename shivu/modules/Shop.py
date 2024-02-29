@@ -31,8 +31,8 @@ async def shop(update, context):
         reply_markup=reply_markup
     )
     
-    context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id}
-
+    context.user_data['shop_message'] = {'message_id': message['message_id'], 'current_index': 0, 'user_id': update.from_user.id}
+    
 async def next_character(update, context):
     user_data = context.user_data.get('shop_message')
     if user_data is None or user_data['user_id'] != update.from_user.id:

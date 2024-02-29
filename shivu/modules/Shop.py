@@ -37,7 +37,7 @@ async def shop(update, context):
         # Store necessary information to identify the message
         shop_message_info = {
             'chat_id': update.chat.id,
-            'message_identifier': f"{update.chat.id}_{message.message_id}",  # Custom identifier
+            'message_id': message.message_id,
             'current_index': 0,
             'user_id': update.effective_user.id
         }
@@ -74,7 +74,7 @@ async def next_character(update, context):
 
         # Update the existing message with details of the next character
         await app.edit_message_media(
-            chat_id=update.callback_query.message.chat.id,
+            chat_id=user_data['chat_id'],
             message_id=user_data['message_id'],
             media=InputMediaPhoto(media=next_character['img_url'], caption=caption),
             reply_markup=reply_markup

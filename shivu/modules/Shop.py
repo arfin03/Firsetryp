@@ -1,13 +1,11 @@
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-
-# Assuming you have necessary functions defined elsewhere
 from shivu import collection, user_collection, shivuu
-
 import logging
 
 # Initialize your Pyrogram client
 app = shivuu
+
+# Assuming you have necessary functions defined elsewhere
 
 async def shop(update, context):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -101,10 +99,8 @@ def get_inline_keyboard(character, current_index=0, total_count=7):
     return InlineKeyboardMarkup(keyboard)
 
 async def set_price(update, context):
-    # Get the user ID of the person invoking the command
     user_id = update.from_user.id
 
-    # Check if the user is the owner (replace '6069337486' with the actual owner ID)
     if user_id != 6655070772:
         await update.reply_text("You are not authorized to use this command.")
         return
@@ -124,10 +120,10 @@ async def set_price(update, context):
 
 async def buy_character(update, context):
     query = update.callback_query
-    character_id_str = query.data.split(":")[1]  # Extract character ID as a string
+    character_id_str = query.data.split(":")[1]  
     character_id = int(character_id_str)
 
-    character = await collection.find_one({'id': character_id_str})  # Use the string ID in the query
+    character = await collection.find_one({'id': character_id_str})  
 
     if not character:
         await query.answer("Character not found.")
@@ -141,7 +137,7 @@ async def buy_character(update, context):
         await query.answer("Failed to retrieve user data.")
         return
 
-    coin_price = int(character.get('coin_price', 0))  # Convert coin_price to integer
+    coin_price = int(character.get('coin_price', 0))
 
     if user_data.get('balance', 0) < coin_price:
         await query.answer("Insufficient balance to buy this character.")
@@ -155,18 +151,16 @@ async def buy_character(update, context):
 async def previous_character(update, context):
     user_data = context.user_data.get('shop_message')
     if user_data is None:
-        return  # Do nothing if user_data is not found
+        return  
 
     current_index = user_data.get('current_index', 0)
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if current_index - 1 >= 0:
-        # Decrement the current_index to get the previous character
         current_index -= 1
         previous_character = rarity_3_characters[current_index]
         reply_markup = get_inline_keyboard(previous_character, current_index)
 
-        # Create the caption with details of the previous character
         caption = f"🪙Welcome back to the Shop! Choose a character to buy:\n\n" \
                   f"🏮Anime Name: {previous_character['anime']}\n" \
                   f"🎴Character Name: {previous_character['name']}\n" \
@@ -174,7 +168,6 @@ async def previous_character(update, context):
                   f"🎗️Character ID: {previous_character['id']}\n" \
                   f"💸Coin Price: {previous_character['coin_price']}"
 
-        # Update the existing message with details of the previous character
         await app.edit_message_media(
             chat_id=update.callback_query.message.chat.id,
             message_id=user_data['message_id'],
@@ -182,26 +175,21 @@ async def previous_character(update, context):
             reply_markup=reply_markup
         )
 
-        # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
 @app.on_message(filters.command("shop"))
 async def handle_shop_command(client, message):
-    args = message.text.split()[1:]
-    await shop(message, args)
+    await shop(message, None)
 
 @app.on_message(filters.command("set"))
 async def handle_set_command(client, message):
-    args = message.text.split()[1:]
-    await set_price(message, args)
+    await set_price(message, None)
 
 @app.on_message(filters.command("buy"))
 async def handle_buy_command(client, message):
-    args = message.text.split()[1:]
-    await buy_character(message, args)
+    await buy_character(message, None)
 
 @app.on_callback_query()
 async def handle_callback_query(client, callback_query):
     # Your callback query handling logic here
     pass
-

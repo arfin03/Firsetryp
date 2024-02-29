@@ -14,9 +14,17 @@ rarity_coin_mapping = {
     "🔮 Limited Edition": 240
 }
 
+rarity = character.get('rarity', 'Unknown Rarity')
+    coin_cost = rarity_coin_mapping.get(rarity, 0)
+
+    if coin_cost == 0:
+        await update.message.reply_text('Invalid rarity..')
+        return
+
 async def sell(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     args = context.args
+
 
     if len(args) != 1:
         await update.message.reply_text("Please provide the character ID to sell.")

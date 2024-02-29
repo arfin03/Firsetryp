@@ -91,11 +91,12 @@ async def close_shop(update, context):
     message_id = user_data.get('message_id')
     if message_id:
         try:
-            await app.delete_messages(chat_id=update.callback_query.message.chat.id, message_ids=message_id)
+            await app.delete_messages(chat_id=user_data['chat_id'], message_ids=message_id)
         except Exception as e:
             logging.error(f"Error deleting message: {e}")
 
     del context.user_data['shop_message']
+
 
 def get_inline_keyboard(character, current_index=0, total_count=7):
     keyboard = []

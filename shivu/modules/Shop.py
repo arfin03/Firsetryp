@@ -1,7 +1,14 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
+from pyrogram import Client, filters
 from shivu import collection, user_collection, shivuu
+
 import logging
+
+# Initialize your Pyrogram client
+app = shivuu
+
+# Assuming you have necessary functions defined elsewhere
 
 async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -179,10 +186,11 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
+# Add handlers to the Pyrogram client
+app.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
+app.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
+app.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
+app.add_handler(CommandHandler("shop", shop, pass_args=True))
+app.add_handler(CommandHandler("set", set_price, pass_args=True))
+app.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
 
-shivuu.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-shivuu.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-shivuu.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-shivuu.add_handler(CommandHandler("shop", shop, block=False))
-shivuu.add_handler(CommandHandler("set", set_price, block=False))
-shivuu.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))

@@ -1,6 +1,7 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
 from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+
+# Assuming you have necessary functions defined elsewhere
 from shivu import collection, user_collection, shivuu
 
 import logging
@@ -8,19 +9,17 @@ import logging
 # Initialize your Pyrogram client
 app = shivuu
 
-# Assuming you have necessary functions defined elsewhere
-
-async def shop(update: Update, context: CallbackContext) -> None:
+async def shop(update, context):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if not rarity_3_characters:
-        await update.message.reply_text("No legendary characters available in the shop.")
+        await update.reply_text("No legendary characters available in the shop.")
         return
         
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
-    message = await context.bot.send_photo(
-        update.message.chat_id,
+    message = await app.send_photo(
+        update.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                 f"🏮Anime Name: {first_character['anime']}\n"
@@ -31,11 +30,11 @@ async def shop(update: Update, context: CallbackContext) -> None:
         reply_markup=reply_markup
     )
     
-    context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.effective_user.id}
+    context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id}
 
-async def next_character(update: Update, context: CallbackContext) -> None:
+async def next_character(update, context):
     user_data = context.user_data.get('shop_message')
-    if user_data is None or user_data['user_id'] != update.effective_user.id:
+    if user_data is None or user_data['user_id'] != update.from_user.id:
         return  # Do nothing if user_data is not found or the user is different
 
     current_index = user_data.get('current_index', 0)
@@ -56,8 +55,8 @@ async def next_character(update: Update, context: CallbackContext) -> None:
                   f"💸Coin Price: {next_character['coin_price']}"
 
         # Update the existing message with details of the next character
-        await context.bot.edit_message_media(
-            chat_id=update.callback_query.message.chat_id,
+        await app.edit_message_media(
+            chat_id=update.callback_query.message.chat.id,
             message_id=user_data['message_id'],
             media=InputMediaPhoto(media=next_character['img_url'], caption=caption),
             reply_markup=reply_markup
@@ -66,7 +65,7 @@ async def next_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-async def close_shop(update: Update, context: CallbackContext) -> None:
+async def close_shop(update, context):
     user_data = context.user_data.get('shop_message')
     if user_data is None:
         return  # Do nothing if user_data is not found
@@ -74,7 +73,7 @@ async def close_shop(update: Update, context: CallbackContext) -> None:
     message_id = user_data.get('message_id')
     if message_id:
         try:
-            await context.bot.delete_message(chat_id=update.callback_query.message.chat_id, message_id=message_id)
+            await app.delete_messages(chat_id=update.callback_query.message.chat.id, message_ids=message_id)
         except Exception as e:
             logging.error(f"Error deleting message: {e}")
 
@@ -101,29 +100,29 @@ def get_inline_keyboard(character, current_index=0, total_count=7):
 
     return InlineKeyboardMarkup(keyboard)
 
-async def set_price(update: Update, context: CallbackContext) -> None:
+async def set_price(update, context):
     # Get the user ID of the person invoking the command
-    user_id = update.effective_user.id
+    user_id = update.from_user.id
 
     # Check if the user is the owner (replace '6069337486' with the actual owner ID)
     if user_id != 6655070772:
-        await update.message.reply_text("You are not authorized to use this command.")
+        await update.reply_text("You are not authorized to use this command.")
         return
 
     args = context.args
     if len(args) != 2:
-        await update.message.reply_text("Invalid command format. Use /set (character ID) (coin price)")
+        await update.reply_text("Invalid command format. Use /set (character ID) (coin price)")
         return
 
     character_id, coin_price = args
     result = await collection.update_one({'id': character_id}, {'$set': {'coin_price': coin_price}})
 
     if result.modified_count == 1:
-        await update.message.reply_text(f"Coin price for Character ID {character_id} set to {coin_price}")
+        await update.reply_text(f"Coin price for Character ID {character_id} set to {coin_price}")
     else:
-        await update.message.reply_text(f"Failed to set coin price. Character ID {character_id} not found.")
+        await update.reply_text(f"Failed to set coin price. Character ID {character_id} not found.")
 
-async def buy_character(update: Update, context: CallbackContext) -> None:
+async def buy_character(update, context):
     query = update.callback_query
     character_id_str = query.data.split(":")[1]  # Extract character ID as a string
     character_id = int(character_id_str)
@@ -134,7 +133,7 @@ async def buy_character(update: Update, context: CallbackContext) -> None:
         await query.answer("Character not found.")
         return
 
-    user_id = update.effective_user.id
+    user_id = update.from_user.id
 
     user_data = await user_collection.find_one({'id': user_id}, projection={'balance': 1, 'characters': 1})
 
@@ -153,7 +152,7 @@ async def buy_character(update: Update, context: CallbackContext) -> None:
 
     await query.answer(f"You have successfully bought {character['name']} for {coin_price} coins!")
 
-async def previous_character(update: Update, context: CallbackContext) -> None:
+async def previous_character(update, context):
     user_data = context.user_data.get('shop_message')
     if user_data is None:
         return  # Do nothing if user_data is not found
@@ -176,8 +175,8 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
                   f"💸Coin Price: {previous_character['coin_price']}"
 
         # Update the existing message with details of the previous character
-        await context.bot.edit_message_media(
-            chat_id=update.callback_query.message.chat_id,
+        await app.edit_message_media(
+            chat_id=update.callback_query.message.chat.id,
             message_id=user_data['message_id'],
             media=InputMediaPhoto(media=previous_character['img_url'], caption=caption),
             reply_markup=reply_markup
@@ -186,22 +185,3 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-@app.on_message(filters.command("shop"))
-async def handle_shop_command(client, message):
-    args = message.text.split()[1:]
-    await shop(message, args)
-
-@app.on_message(filters.command("set"))
-async def handle_set_command(client, message):
-    args = message.text.split()[1:]
-    await set_price(message, args)
-
-@app.on_message(filters.command("buy"))
-async def handle_buy_command(client, message):
-    args = message.text.split()[1:]
-    await buy_character(message, args)
-
-@app.on_callback_query()
-async def handle_callback_query(client, callback_query):
-    # Your callback query handling logic here
-    pass

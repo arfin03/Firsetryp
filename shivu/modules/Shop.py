@@ -34,11 +34,11 @@ async def shop(update, context):
             reply_markup=reply_markup
         )
         
-        # Extract the message ID from the sent_message
-        message_id = sent_message.message_id
+        # Construct a unique identifier for the message
+        message_identifier = f"{update.chat.id}_{sent_message.message_id}"
         
-        # Update user_data with message_id
-        context.user_data['shop_message'] = {'message_id': message_id, 'current_index': 0, 'user_id': update.effective_user.id}
+        # Update user_data with the unique message identifier
+        context.user_data['shop_message'] = {'message_identifier': message_identifier, 'current_index': 0, 'user_id': update.effective_user.id}
     except Exception as e:
         # Log the error
         logging.error(f"Error in shop function: {e}")

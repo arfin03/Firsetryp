@@ -41,18 +41,13 @@ async def sell(update: Update, context: CallbackContext) -> None:
     user['characters'].remove(character_to_sell)
     await user_collection.update_one({'id': user_id}, {'$set': {'characters': user['characters']}})
 
-    # Award coins based on rarity
-    coins_awarded = rarity_coin_mapping.get(character_to_sell.get('rarity', 'Unknown'), 0)
-    if coins_awarded == 0:
-        await update.message.reply_text(f"Character {character_id} sold! You received 0 coins because of unknown rarity.")
-        return
-
-    rarity = character.get('rarity', 'Unknown Rarity')
-    coin_cost = rarity_coin_mapping.get(rarity, 0)
 
     if coin_cost == 0:
         await update.message.reply_text('Invalid rarity..')
         return
+
+    rarity = character.get('rarity', 'Unknown Rarity')
+    coin_cost = rarity_coin_mapping.get(rarity, 0)
 
     if 'balance' in user:
         user['balance'] += coins_awarded

@@ -90,8 +90,9 @@ async def rarity2_callback(client, callback_query):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
 
-        await query.edit_message_caption(caption=message, reply_markup=reply_markup)
-        
+        query.edit_message_caption(caption=message, reply_markup=reply_markup)
+
+
 @app.on_callback_query(filters.regex('^(next|prev)_'))
 async def next_or_back_callback(client, callback_query):
     query = callback_query

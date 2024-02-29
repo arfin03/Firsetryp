@@ -24,11 +24,20 @@ async def start(update: Update, context: CallbackContext) -> None:
                                        parse_mode='HTML')
         
 
+# Check if user is a member of the group
+    if update.effective_chat.type != "private":
+        group_member = await context.bot.get_chat_member(update.effective_chat.id, user_id)
+        if group_member.status in ["left", "kicked"]:
+            # If the user has left or been kicked from the group, prompt them to rejoin
+            await context.bot.send_message(chat_id=user_id,
+                                           text="Please rejoin the group to start using the bot.")
+            return
+
     # Check if bot is a member of the support group
-    if not await context.bot.get_chat_member(SUPPORT_GC, context.bot.id):
+    if not await context.bot.get_chat_member(SUPPORT_CHAT, context.bot.id):
         # Send a message to the user asking them to invite the bot to the support group
         await context.bot.send_message(chat_id=user_id, 
-                                       text=f"Welcome! Please invite me to join our support group @dark_world_231 to start using the bot.")
+                                       text=f"Welcome! Please invite me to join our support group @{SUPPORT_CHAT} to start using the bot.")
         
         # Send another message with an invitation link to the support group
         invite_link = await context.bot.export_chat_invite_link(SUPPORT_CHAT)
@@ -36,7 +45,7 @@ async def start(update: Update, context: CallbackContext) -> None:
                                        text=f"You can invite me to the support group using this [invite link]({invite_link}).",
                                        parse_mode='markdown')
         return
-
+        
     else:
         
         if user_data['first_name'] != first_name or user_data['username'] != username:

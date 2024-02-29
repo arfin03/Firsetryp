@@ -34,13 +34,13 @@ async def start(update: Update, context: CallbackContext) -> None:
             return
 
     # Check if bot is a member of the support group
-    if not await context.bot.get_chat_member(SUPPORT_CHAT, context.bot.id):
+    if not await context.bot.get_chat_member(SUPPORT_GC, context.bot.id):
         # Send a message to the user asking them to invite the bot to the support group
         await context.bot.send_message(chat_id=user_id, 
                                        text=f"Welcome! Please invite me to join our support group @{SUPPORT_CHAT} to start using the bot.")
         
         # Send another message with an invitation link to the support group
-        invite_link = await context.bot.export_chat_invite_link(SUPPORT_CHAT)
+        invite_link = await context.bot.export_chat_invite_link(SUPPORT_GC)
         await context.bot.send_message(chat_id=user_id,
                                        text=f"You can invite me to the support group using this [invite link]({invite_link}).",
                                        parse_mode='markdown')

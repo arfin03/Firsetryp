@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-from shivu import collection, user_collection, application
+from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
+from shivu import collection, user_collection, shivuu
 import logging
 
 async def shop(update: Update, context: CallbackContext) -> None:
@@ -146,27 +146,6 @@ async def buy_character(update: Update, context: CallbackContext) -> None:
 
     await query.answer(f"You have successfully bought {character['name']} for {coin_price} coins!")
 
-def get_inline_keyboard(character, current_index=0, total_count=7):
-    keyboard = []
-
-    if current_index == 0:
-        # For the first character, display "CLOSED" and "NEXT" buttons
-        keyboard.append([
-            InlineKeyboardButton("❎𝘾𝙇𝙊𝙎𝙀𝘿❎", callback_data="shop:closed"),
-            InlineKeyboardButton("➡️𝙉𝙀𝙓𝙏➡️", callback_data=f"shop_next_{current_index + 1}")
-        ])
-    else:
-        # For all other characters, display both "BACK" and "NEXT" buttons
-        keyboard.append([
-            InlineKeyboardButton(" ⬅️𝘽𝘼𝘾𝙆⬅️", callback_data="shop:back"),
-            InlineKeyboardButton("➡️𝙉𝙀𝙓𝙏➡️", callback_data=f"shop_next_{current_index + 1}")
-        ])
-
-    # Add "Buy" button for all characters
-    keyboard.append([InlineKeyboardButton("✅𝘽𝙐𝙔✅", callback_data=f"buy:{character['id']}")])
-
-    return InlineKeyboardMarkup(keyboard)
-
 async def previous_character(update: Update, context: CallbackContext) -> None:
     user_data = context.user_data.get('shop_message')
     if user_data is None:
@@ -201,10 +180,9 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         context.user_data['shop_message']['current_index'] = current_index
 
 
-# Add a handler for the 'closed' button
-application.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-application.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-application.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-application.add_handler(CommandHandler("shop", shop, block=False))
-application.add_handler(CommandHandler("set", set_price, block=False))
-application.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
+shivuu.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
+shivuu.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
+shivuu.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
+shivuu.add_handler(CommandHandler("shop", shop, block=False))
+shivuu.add_handler(CommandHandler("set", set_price, block=False))
+shivuu.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))

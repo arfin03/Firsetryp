@@ -16,15 +16,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 
     user_data = await collection.find_one({"_id": user_id})
 
-    if user_data is None:
-        await collection.insert_one({"_id": user_id, "first_name": first_name, "username": username})
-        
-        await context.bot.send_message(chat_id=GROUP_ID, 
-                                       text=f"New user Started The Bot..\n User: <a href='tg://user?id={user_id}'>{escape(first_name)})</a>", 
-                                       parse_mode='HTML')
-        
-
-# Check if user is a member of the group
+    # Check if user is a member of the group
     if update.effective_chat.type != "private":
         group_member = await context.bot.get_chat_member(update.effective_chat.id, user_id)
         if group_member.status in ["left", "kicked"]:
@@ -33,58 +25,43 @@ async def start(update: Update, context: CallbackContext) -> None:
                                            text="Please rejoin the group to start using the bot.")
             return
 
-    # Check if bot is a member of the support group
-    if not await context.bot.get_chat_member(SUPPORT_GC, context.bot.id):
-        # Send a message to the user asking them to invite the bot to the support group
-        await context.bot.send_message(chat_id=user_id, 
-                                       text=f"Welcome! Please invite me to join our support group @{SUPPORT_CHAT} to start using the bot.")
-        
-        # Send another message with an invitation link to the support group
-        invite_link = await context.bot.export_chat_invite_link(SUPPORT_GC)
-        await context.bot.send_message(chat_id=user_id,
-                                       text=f"You can invite me to the support group using this [invite link]({invite_link}).",
-                                       parse_mode='markdown')
-        return
-        
-    else:
-        
-        if user_data['first_name'] != first_name or user_data['username'] != username:
+        # Your existing code continues here...
+        if user_data is None:
+            await collection.insert_one({"_id": user_id, "first_name": first_name, "username": username})
             
-            await collection.update_one({"_id": user_id}, {"$set": {"first_name": first_name, "username": username}})
+            await context.bot.send_message(chat_id=GROUP_ID, 
+                                           text=f"New user Started The Bot..\n User: <a href='tg://user?id={user_id}'>{escape(first_name)})</a>", 
+                                           parse_mode='HTML')
 
-    
+            if update.effective_chat.type == "private":
+                caption = f"""
+                ***Heyyyy...***
 
-    if update.effective_chat.type== "private":
-        
-        
-        caption = f"""
-        ***Heyyyy...***
+                ***I am An Open Source Character Catcher Bot...​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem***
+                """
+                
+                keyboard = [
+                    [InlineKeyboardButton("ADD ME", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
+                    [InlineKeyboardButton("SUPPORT", url=f'https://t.me/{SUPPORT_CHAT}'),
+                    InlineKeyboardButton("UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
+                    [InlineKeyboardButton("HELP", callback_data='help')]
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                photo_url = random.choice(PHOTO_URL)
 
-***I am An Open Source Character Catcher Bot...​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem***
-        """
-        
-        keyboard = [
-            [InlineKeyboardButton("ADD ME", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
-            [InlineKeyboardButton("SUPPORT", url=f'https://t.me/{SUPPORT_CHAT}'),
-            InlineKeyboardButton("UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("HELP", callback_data='help')]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        photo_url = random.choice(PHOTO_URL)
+                await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
-
-    else:
-        photo_url = random.choice(PHOTO_URL)
-        keyboard = [
-            [InlineKeyboardButton("ADD ME", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
-            [InlineKeyboardButton("SUPPORT", url=f'https://t.me/{SUPPORT_CHAT}'),
-            InlineKeyboardButton("UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("HELP", callback_data='help')]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="🎴Alive!?... \n connect to me in PM For more information ",reply_markup=reply_markup )
+            else:
+                photo_url = random.choice(PHOTO_URL)
+                keyboard = [
+                    [InlineKeyboardButton("ADD ME", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
+                    [InlineKeyboardButton("SUPPORT", url=f'https://t.me/{SUPPORT_CHAT}'),
+                    InlineKeyboardButton("UPDATES", url=f'https://t.me/{UPDATE_CHAT}')],
+                    [InlineKeyboardButton("HELP", callback_data='help')]
+                ]
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="🎴Alive!?... \n connect to me in PM For more information ",reply_markup=reply_markup )
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -114,7 +91,7 @@ async def button(update: Update, context: CallbackContext) -> None:
         caption = f"""
         ***Hoyyyy...*** ✨
 
-***I am An Open Source Character Catcher Bot..​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem***
+        ***I am An Open Source Character Catcher Bot..​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem***
         """
 
         

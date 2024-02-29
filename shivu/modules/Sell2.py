@@ -41,7 +41,7 @@ async def sell(update: Update, context: CallbackContext) -> None:
     coins_awarded = rarity_coin_mapping.get(rarity, None)
     
     if coins_awarded is None:
-        await update.message.reply_text(f"Cannot sell character {character_id}. Rarity '{rarity}' not found in mapping.")
+        await update.message.reply_text(f"Sorry ! you Can't sell that Character")
         return
 
     # Deduct the character from the user's harem
@@ -54,7 +54,7 @@ async def sell(update: Update, context: CallbackContext) -> None:
     else:
         user['balance'] = coins_awarded
     await user_collection.update_one({'id': user_id}, {'$set': {'balance': user['balance']}})
-    await update.message.reply_text(f"Character {character_id} sold! You received {coins_awarded} coins.")
+    await update.message.reply_text("Character {character_id} sold! You received {coins_awarded} coins.")
 
 # Inside main(), add this line to register the /sell command handler
 SELL_HANDLER = CommandHandler('sell', sell, block=False)

@@ -19,7 +19,6 @@ async def sell(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     args = context.args
 
-
     if len(args) != 1:
         await update.message.reply_text("Please provide the character ID to sell.")
         return
@@ -37,18 +36,19 @@ async def sell(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text("This character does not exist in your harem.")
         return
 
+    # Check if the character's rarity is in the mapping
+    rarity = character_to_sell.get('rarity', 'Unknown')
+    coins_awarded = rarity_coin_mapping.get(rarity, None)
+    
+    if coins_awarded is None:
+        await update.message.reply_text(f"Cannot sell character {character_id}. Rarity '{rarity}' not found in mapping.")
+        return
+
     # Deduct the character from the user's harem
     user['characters'].remove(character_to_sell)
     await user_collection.update_one({'id': user_id}, {'$set': {'characters': user['characters']}})
 
-
-    if coin_cost == 0:
-        await update.message.reply_text('Invalid rarity..')
-        return
-
-    rarity = character.get('rarity', 'Unknown Rarity')
-    coin_cost = rarity_coin_mapping.get(rarity, 0)
-
+    # Award coins based on rarity
     if 'balance' in user:
         user['balance'] += coins_awarded
     else:

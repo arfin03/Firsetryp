@@ -20,6 +20,8 @@ async def shop(update, context):
             
         first_character = rarity_3_characters[0]
         reply_markup = get_inline_keyboard(first_character)
+        
+        # Attempt to send the photo
         message = await app.send_photo(
             update.chat.id,
             photo=first_character['img_url'],
@@ -43,7 +45,6 @@ async def shop(update, context):
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
-
 
 async def next_character(update, context):
     user_data = context.user_data.get('shop_message')

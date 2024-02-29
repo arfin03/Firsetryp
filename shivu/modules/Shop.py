@@ -37,7 +37,7 @@ async def shop(update, context):
         # Store necessary information to identify the message
         shop_message_info = {
             'chat_id': update.chat.id,
-            'message_id': message.message_id,
+            'message_id': message.message_id,  # Use message_id directly from the response
             'current_index': 0,
             'user_id': update.effective_user.id
         }

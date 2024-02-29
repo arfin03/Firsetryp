@@ -22,7 +22,7 @@ async def shop(update, context):
         reply_markup = get_inline_keyboard(first_character)
         
         # Attempt to send the photo
-        message = await app.send_photo(
+        sent_message = await app.send_photo(
             update.chat.id,
             photo=first_character['img_url'],
             caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
@@ -34,12 +34,11 @@ async def shop(update, context):
             reply_markup=reply_markup
         )
         
-        # Check if message is None or doesn't have message_id attribute
-        if message is None or not hasattr(message, 'message_id'):
-            raise ValueError("Invalid message object returned")
+        # Extract the message ID from the sent_message
+        message_id = sent_message.message_id
         
-        # Update user_data only if message is successfully sent
-        context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.effective_user.id}
+        # Update user_data with message_id
+        context.user_data['shop_message'] = {'message_id': message_id, 'current_index': 0, 'user_id': update.effective_user.id}
     except Exception as e:
         # Log the error
         logging.error(f"Error in shop function: {e}")

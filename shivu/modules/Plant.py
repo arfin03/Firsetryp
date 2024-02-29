@@ -160,13 +160,12 @@ async def claim_reward(update: Update, context: CallbackContext):
         await update.message.reply_text("You don't have a plant.")
 
 # Function to handle /top command
-async def top_plant_levels(update: Update, context: CallbackContext):
+def top_plant_levels(update: Update, context: CallbackContext):
     # Retrieve plant data for multiple users
     top_users_cursor = collection.find().sort("level", pymongo.DESCENDING).limit(10)
     
     top_users_info = []
-    for idx, user_data in enumerate(top_users_cursor, start=1):
-        # Get user object
+    async def process_user_data(user_data):
         user = await context.bot.get_chat(user_data['user_id'])
         if user.first_name:
             full_name = user.first_name
@@ -174,13 +173,20 @@ async def top_plant_levels(update: Update, context: CallbackContext):
                 full_name += " " + user.last_name
             user_link = f'<a href="tg://user?id={user.id}">{full_name}</a>'
             top_users_info.append(f"{user_link} - Level: {user_data['level']}")
+
+    async def process_all_users():
+        await asyncio.gather(*[process_user_data(user_data) async for user_data in top_users_cursor])
+
+    async def send_message():
+        if top_users_info:
+            message = "\n".join(top_users_info)
+            pic = "https://telegra.ph/file/f466f1fdab10ab5a0fc11.jpg"
+            await update.message.reply_photo(photo=pic, caption=f"Top 10 Users by Plant Level:\n\n{message}", parse_mode="HTML")
+        else:
+            await update.message.reply_text("No users found.")
     
-    if top_users_info:
-        message = "\n".join(top_users_info)
-        pic = "https://telegra.ph/file/f466f1fdab10ab5a0fc11.jpg"
-        await update.message.reply_photo(photo=pic, caption=f"Top 10 Users by Plant Level:\n\n{message}", parse_mode="HTML")
-    else:
-        await update.message.reply_text("No users found.")
+    asyncio.run(process_all_users())
+    asyncio.run(send_message())
 
 # Add the /top command handler to your application
 application.add_handler(CommandHandler("ptop", top_plant_levels))

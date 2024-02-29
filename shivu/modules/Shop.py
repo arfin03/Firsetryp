@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-from Grabber import collection, user_collection, application
+from shivu import collection, user_collection, application
 import logging
 
 async def shop(update: Update, context: CallbackContext) -> None:

@@ -22,8 +22,7 @@ async def shop(update, context):
         reply_markup = get_inline_keyboard(first_character)
         
         # Attempt to send the photo
-        message = await app.send_photo(
-            update.chat.id,
+        message = await update.reply_photo(
             photo=first_character['img_url'],
             caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                     f"🏮Anime Name: {first_character['anime']}\n"
@@ -37,7 +36,7 @@ async def shop(update, context):
         # Store necessary information to identify the message
         shop_message_info = {
             'chat_id': update.chat.id,
-            'message_id': message.message_id,  # Use message_id directly from the response
+            'message_id': message.message_id,  # Use message_id from the response
             'current_index': 0,
             'user_id': update.effective_user.id
         }

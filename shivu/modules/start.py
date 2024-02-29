@@ -16,12 +16,18 @@ async def start(update: Update, context: CallbackContext) -> None:
     user_data = await collection.find_one({"_id": user_id})
 
     if user_data is None:
-        
         await collection.insert_one({"_id": user_id, "first_name": first_name, "username": username})
         
         await context.bot.send_message(chat_id=GROUP_ID, 
                                        text=f"New user Started The Bot..\n User: <a href='tg://user?id={user_id}'>{escape(first_name)})</a>", 
                                        parse_mode='HTML')
+        
+        # Checking if user is not in the support group, then prompt to join
+        if SUPPORT_CHAT not in [chat.username for chat in context.bot.get_chat_administrators(user_id)]:
+            await context.bot.send_message(chat_id=user_id, 
+                                           text=f"Welcome! Please join our support group @{SUPPORT_CHAT} to start using the bot.")
+            return
+
     else:
         
         if user_data['first_name'] != first_name or user_data['username'] != username:

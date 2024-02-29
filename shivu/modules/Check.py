@@ -43,7 +43,7 @@ from telegram.ext import CommandHandler, CallbackContext
 from shivu import collection, user_collection, application
 
 # Set the owner's user ID
-OWNER_ID = 6069337486  # Replace with the actual owner's user ID
+OWNER_ID = 6655070772  # Replace with the actual owner's user ID
 
 async def give(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id

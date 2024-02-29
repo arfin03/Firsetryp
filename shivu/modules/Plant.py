@@ -4,6 +4,8 @@ import pymongo
 import asyncio
 from datetime import datetime, timedelta
 
+from shivu import application 
+
 # Connect to MongoDB
 client = pymongo.MongoClient("mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority")
 db = client["plant_game3"]

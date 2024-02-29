@@ -186,11 +186,22 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-# Add handlers to the Pyrogram client
-app.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-app.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-app.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-app.add_handler(CommandHandler("shop", shop, pass_args=True))
-app.add_handler(CommandHandler("set", set_price, pass_args=True))
-app.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
+@app.on_message(filters.command("shop"))
+async def handle_shop_command(client, message):
+    args = message.text.split()[1:]
+    await shop(message, args)
 
+@app.on_message(filters.command("set"))
+async def handle_set_command(client, message):
+    args = message.text.split()[1:]
+    await set_price(message, args)
+
+@app.on_message(filters.command("buy"))
+async def handle_buy_command(client, message):
+    args = message.text.split()[1:]
+    await buy_character(message, args)
+
+@app.on_callback_query()
+async def handle_callback_query(client, callback_query):
+    # Your callback query handling logic here
+    pass

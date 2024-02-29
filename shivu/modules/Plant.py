@@ -1,9 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQueryHandler
-
 import pymongo
-from shivu import application, user_collection
-import time
+import asyncio
 from datetime import datetime, timedelta
 
 # Connect to MongoDB
@@ -116,7 +114,6 @@ async def my_code(update: Update, context: CallbackContext):
 def calculate_coins(level):
     return level * 100
 
-
 # Function to get plant image URL based on level
 def get_plant_image_url(level):
     for threshold in sorted(plant_image_urls.keys(), reverse=True):
@@ -160,7 +157,6 @@ async def claim_reward(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("You don't have a plant.")
 
-
 async def top_plant_levels(update: Update, context: CallbackContext):
     # Retrieve plant data for multiple users
     top_users_cursor = collection.find().sort("level", pymongo.DESCENDING).limit(10)
@@ -186,11 +182,8 @@ async def top_plant_levels(update: Update, context: CallbackContext):
 # Add the /top command handler to your application
 application.add_handler(CommandHandler("ptop", top_plant_levels))
 
-
-
 # Add the /claim command handler to your application
-application.add_handler(CommandHandler("claim", claim_reward, block=False))
-
+application.add_handler(CommandHandler("claim", claim_reward, pass_update_queue=True))
 
 application.add_handler(CommandHandler("myplant", my_plant))
 application.add_handler(CommandHandler("mycode", my_code))

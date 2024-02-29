@@ -11,27 +11,34 @@ app = shivuu
 # Assuming you have necessary functions defined elsewhere
 
 async def shop(update, context):
-    rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
+    try:
+        rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
-    if not rarity_3_characters:
-        await update.reply_text("No legendary characters available in the shop.")
-        return
+        if not rarity_3_characters:
+            await update.reply_text("No legendary characters available in the shop.")
+            return
+            
+        first_character = rarity_3_characters[0]
+        reply_markup = get_inline_keyboard(first_character)
+        message = await app.send_photo(
+            update.chat.id,
+            photo=first_character['img_url'],
+            caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
+                    f"🏮Anime Name: {first_character['anime']}\n"
+                    f"🎴Character Name: {first_character['name']}\n"
+                    f"🌀Rarity: {first_character['rarity']}\n"
+                    f"🎗️Character ID: {first_character['id']}\n"
+                    f"💸Coin Price: {first_character['coin_price']}",
+            reply_markup=reply_markup
+        )
         
-    first_character = rarity_3_characters[0]
-    reply_markup = get_inline_keyboard(first_character)
-    message = await app.send_photo(
-        update.chat.id,
-        photo=first_character['img_url'],
-        caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
-                f"🏮Anime Name: {first_character['anime']}\n"
-                f"🎴Character Name: {first_character['name']}\n"
-                f"🌀Rarity: {first_character['rarity']}\n"
-                f"🎗️Character ID: {first_character['id']}\n"
-                f"💸Coin Price: {first_character['coin_price']}",
-        reply_markup=reply_markup
-    )
-    
-context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.effective_user.id}
+        # Update user_data only if message is successfully sent
+        context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.effective_user.id}
+    except Exception as e:
+        # Log the error
+        logging.error(f"Error in shop function: {e}")
+        # Optionally, you can also inform the user about the error
+        await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
 
 
 async def next_character(update, context):

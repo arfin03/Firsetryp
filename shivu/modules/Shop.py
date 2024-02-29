@@ -32,6 +32,10 @@ async def shop(update, context):
             reply_markup=reply_markup
         )
         
+        # Check if message is None or doesn't have message_id attribute
+        if message is None or not hasattr(message, 'message_id'):
+            raise ValueError("Invalid message object returned")
+        
         # Update user_data only if message is successfully sent
         context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.effective_user.id}
     except Exception as e:

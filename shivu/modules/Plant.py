@@ -159,6 +159,7 @@ async def claim_reward(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("You don't have a plant.")
 
+# Function to handle /top command
 async def top_plant_levels(update: Update, context: CallbackContext):
     # Retrieve plant data for multiple users
     top_users_cursor = collection.find().sort("level", pymongo.DESCENDING).limit(10)

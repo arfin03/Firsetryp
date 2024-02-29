@@ -185,7 +185,7 @@ async def top_plant_levels(update: Update, context: CallbackContext):
 application.add_handler(CommandHandler("ptop", top_plant_levels))
 
 # Add the /claim command handler to your application
-application.add_handler(CommandHandler("claim", claim_reward, pass_update_queue=True))
+application.add_handler(CommandHandler("claim", claim_reward))
 
 application.add_handler(CommandHandler("myplant", my_plant))
 application.add_handler(CommandHandler("mycode", my_code))

@@ -32,7 +32,7 @@ async def shop(update, context):
     )
     
     # Store the message ID directly
-    context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id}
+    context.user_data['shop_message'] = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.effective_user.id}
 
 async def next_character(update, context):
     user_data = context.user_data.get('shop_message')

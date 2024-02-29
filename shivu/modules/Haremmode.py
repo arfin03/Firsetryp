@@ -90,6 +90,8 @@ async def rarity2_callback(client, callback_query):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await query.edit_message_caption(caption=message, reply_markup=reply_markup)
+except Exception as e:
+    print(f"An error occurred while editing the message caption: {e}")
 
 @app.on_callback_query(filters.regex('^(next|prev)_'))
 async def next_or_back_callback(client, callback_query):

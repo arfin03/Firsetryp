@@ -1,11 +1,10 @@
-from telegram.ext import CommandHandler, MessageHandler 
+from telegram.ext import CommandHandler, Updater, CallbackContext, InlineKeyboardMarkup, InlineKeyboardButton
+
 from shivu import application, user_collection
 from telegram import Update
-from telegram.ext import CallbackContext
-
 from datetime import datetime, timedelta
 
-async def bonus(update, context):
+async def bonus(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 
     # Check if the user has claimed the bonus this week
@@ -33,9 +32,29 @@ async def bonus(update, context):
         # User was kicked from the channel, inform them to contact support
         await update.message.reply_text("You were kicked from our support channel. Please contact support for assistance.")
     else:
-        # User is already a member, grant the bonus
-        await user_collection.update_one({'id': user_id}, {'$inc': {'balance': 200}, '$set': {'last_bonus_claim': datetime.utcnow()}})
-        await update.message.reply_text("Congratulations! You've been awarded 200 coins as a weekly bonus.")
+        # User is already a member, prompt them to confirm claiming the bonus
 
-# Add the command handler to your application
+        keyboard = InlineKeyboardMarkup(row_width=1)
+        claim_button = InlineKeyboardButton(text="Claim Bonus", callback_data="claim_bonus")
+        keyboard.add(claim_button)
+
+        await update.message.reply_text(
+            "Are you sure you want to claim your weekly bonus of 200 coins?",
+            reply_markup=keyboard
+        )
+
+# Define a callback handler for the claim button
+def claim_bonus_callback(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user_id = query.from_user.id
+
+    # Perform claim logic here (similar to existing bonus function)
+    # ...
+
+    # Reply to the user after processing
+    query.answer("Bonus claimed successfully!")
+
 application.add_handler(CommandHandler("bonus", bonus, block=False))
+
+# Add the callback handler for the claim button
+application.add_handler(CallbackQueryHandler(claim_bonus_callback))

@@ -1,6 +1,6 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 
-from telegram.ext import CommandHandler, Updater, CallbackContext, 
+from telegram.ext import CommandHandler, Updater, CallbackContext
 
 from shivu import application, user_collection
 from telegram import Update

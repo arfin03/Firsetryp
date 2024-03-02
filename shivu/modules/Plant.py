@@ -1,9 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQueryHandler
-
 import pymongo
-from shivu import application, user_collection
-import time
 from datetime import datetime, timedelta
 
 # Connect to MongoDB
@@ -53,8 +50,12 @@ async def my_plant(update: Update, context: CallbackContext):
         coins = user_data.get('coins', 0)
         message = f"🌱 Your plant, {user_name}, is currently at level {plant_level}. Keep growing it!\n\nYour unique code: {user_id}"
 
-        # Send message with plant image, user's plant level, user's code
-        await update.message.reply_photo(photo=plant_image_url, caption=message)
+        # Create inline keyboard with a "Claim" button
+        keyboard = [[InlineKeyboardButton("Claim Reward", callback_data='claim')]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        # Send message with plant image, user's plant level, user's code, and the inline keyboard
+        await update.message.reply_photo(photo=plant_image_url, caption=message, reply_markup=reply_markup)
     else:
         # If user doesn't have a plant, create one with initial level 1 and save to MongoDB
         new_plant = {"user_id": user_id, "level": 1}
@@ -116,49 +117,12 @@ async def my_code(update: Update, context: CallbackContext):
 def calculate_coins(level):
     return level * 100
 
-
 # Function to get plant image URL based on level
 def get_plant_image_url(level):
     for threshold in sorted(plant_image_urls.keys(), reverse=True):
         if level >= threshold:
             return plant_image_urls[threshold]
     return plant_image_urls[1]  # Default to level 1 image if no match
-
-async def claim_reward(update: Update, context: CallbackContext):
-    user_id = update.effective_user.id
-
-    # Retrieve user's plant data from MongoDB
-    user_data = collection.find_one({"user_id": user_id})
-
-    if user_data:
-        last_claim_time = user_data.get('last_claim_time')
-        if last_claim_time and datetime.now() - last_claim_time < timedelta(days=1):
-            await update.message.reply_text("You have already claimed your coins for today.")
-        else:
-            coins = calculate_coins(user_data['level'])  # Assuming calculate_coins is defined elsewhere
-            
-            # Update user's balance in user_collection
-            user_balance_data = await user_collection.find_one({"id": user_id})
-            if user_balance_data:
-                await user_collection.update_one(
-                    {"id": user_id},
-                    {"$set": {"last_claim_time": datetime.now()}, "$inc": {"balance": coins}},
-                    upsert=True
-                )
-            else:
-                # If user's balance data doesn't exist, create a new entry
-                await user_collection.insert_one({"id": user_id, "balance": coins, "last_claim_time": datetime.now()})
-                
-            await update.message.reply_text(f"🎉 You have claimed {coins} coins!")
-
-            # Update last_claim_time in plant collection as well
-            collection.update_one(
-                {"user_id": user_id},
-                {"$set": {"last_claim_time": datetime.now()}},
-                upsert=True
-            )
-    else:
-        await update.message.reply_text("You don't have a plant.")
 
 
 async def top_plant_levels(update: Update, context: CallbackContext):
@@ -186,13 +150,7 @@ async def top_plant_levels(update: Update, context: CallbackContext):
 # Add the /top command handler to your application
 application.add_handler(CommandHandler("ptop", top_plant_levels))
 
-
-
-# Add the /claim command handler to your application
-application.add_handler(CommandHandler("claim", claim_reward, block=False))
-
-
+# Add the /claim command handler to y
 application.add_handler(CommandHandler("myplant", my_plant))
 application.add_handler(CommandHandler("mycode", my_code))
 application.add_handler(CommandHandler("code", code))
-application.add_handler(CallbackQueryHandler(button_click, pattern='claim'))

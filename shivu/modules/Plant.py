@@ -18,7 +18,8 @@ plant_image_urls = {
 }
 
 # Function to handle button click
-async def button_click(update: Update, context: CallbackContext):
+# Function to handle button click for claiming rewards
+async def claim_reward_button(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     user_id = query.from_user.id
@@ -31,11 +32,31 @@ async def button_click(update: Update, context: CallbackContext):
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=1):
             await query.edit_message_text(text="You have already claimed your coins for today.")
         else:
-            coins = calculate_coins(user_data['level'])
-            collection.update_one({"user_id": user_id}, {"$set": {"last_claim_time": datetime.now()}, "$inc": {"coins": coins}}, upsert=True)
+            coins = calculate_coins(user_data['level'])  # Assuming calculate_coins is defined elsewhere
+            
+            # Update user's balance in user_collection
+            user_balance_data = await user_collection.find_one({"id": user_id})
+            if user_balance_data:
+                await user_collection.update_one(
+                    {"id": user_id},
+                    {"$set": {"last_claim_time": datetime.now()}, "$inc": {"balance": coins}},
+                    upsert=True
+                )
+            else:
+                # If user's balance data doesn't exist, create a new entry
+                await user_collection.insert_one({"id": user_id, "balance": coins, "last_claim_time": datetime.now()})
+                
             await query.edit_message_text(text=f"🎉 You have claimed {coins} coins!")
+
+            # Update last_claim_time in plant collection as well
+            collection.update_one(
+                {"user_id": user_id},
+                {"$set": {"last_claim_time": datetime.now()}},
+                upsert=True
+            )
     else:
         await query.edit_message_text(text="You don't have a plant.")
+
 
 # Function to handle /myplant command
 async def my_plant(update: Update, context: CallbackContext):
@@ -156,3 +177,8 @@ application.add_handler(CommandHandler("ptop", top_plant_levels))
 application.add_handler(CommandHandler("myplant", my_plant))
 application.add_handler(CommandHandler("mycode", my_code))
 application.add_handler(CommandHandler("code", code))
+
+
+# Add the callback query handler for the claim reward button
+application.add_handler(CallbackQueryHandler(claim_reward_button, pattern='claim'))
+

@@ -3,7 +3,7 @@ from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQuery
 import pymongo
 from datetime import datetime, timedelta
 
-from suivu import application 
+from suivu import application, user_collection 
 
 # Connect to MongoDB
 client = pymongo.MongoClient("mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority")

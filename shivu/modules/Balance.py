@@ -103,10 +103,10 @@ async def daily_reward(update, context):
     # Grant the daily reward
     await user_collection.update_one(
         {'id': user_id},
-        {'$inc': {'balance': 20}, '$set': {'last_daily_reward': datetime.utcnow()}}
+        {'$inc': {'balance': 10}, '$set': {'last_daily_reward': datetime.utcnow()}}
     )
 
-    await update.message.reply_text("Congratulations! You've claimed your daily reward of 20 coins.")
+    await update.message.reply_text("Congratulations! You've claimed your daily reward of 10 coins.")
 
 # Add the command handler to your application
 application.add_handler(CommandHandler("dailyreward", daily_reward, block=False))

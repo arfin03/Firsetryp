@@ -3,7 +3,7 @@ from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQuery
 import pymongo
 from datetime import datetime, timedelta
 
-from shivu import application, user_collection 
+from shivu import application, user_collection, shivuu
 
 # Connect to MongoDB
 client = pymongo.MongoClient("mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority")
@@ -17,12 +17,10 @@ plant_image_urls = {
     60: "https://telegra.ph/file/f9b1607ffe259b8aaac3d.png"
 }
 
-# Function to handle button click
 # Function to handle button click for claiming rewards
-async def claim_reward_button(update: Update, context: CallbackContext):
-    query = update.callback_query
-    query.answer()
-    user_id = query.from_user.id
+@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim"))
+async def claim_reward_button(client, callback_query):
+    user_id = callback_query.from_user.id
 
     # Retrieve user's plant data from MongoDB
     user_data = collection.find_one({"user_id": user_id})
@@ -30,7 +28,7 @@ async def claim_reward_button(update: Update, context: CallbackContext):
     if user_data:
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=1):
-            await query.edit_message_text(text="You have already claimed your coins for today.")
+            await callback_query.answer("You have already claimed your coins for today.")
         else:
             coins = calculate_coins(user_data['level'])  # Assuming calculate_coins is defined elsewhere
             
@@ -46,7 +44,7 @@ async def claim_reward_button(update: Update, context: CallbackContext):
                 # If user's balance data doesn't exist, create a new entry
                 await user_collection.insert_one({"id": user_id, "balance": coins, "last_claim_time": datetime.now()})
                 
-            await query.edit_message_text(text=f"🎉 You have claimed {coins} coins!")
+            await callback_query.edit_message_text(text=f"🎉 You have claimed {coins} coins!")
 
             # Update last_claim_time in plant collection as well
             collection.update_one(
@@ -55,7 +53,8 @@ async def claim_reward_button(update: Update, context: CallbackContext):
                 upsert=True
             )
     else:
-        await query.edit_message_text(text="You don't have a plant.")
+        await callback_query.edit_message_text(text="You don't have a plant.")
+
 
 
 # Function to handle /myplant command

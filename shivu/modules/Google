@@ -18,7 +18,9 @@ from pyrogram.types import (
 from pyrogram import Client, filters
 
 # Replace "Grabber" with your actual module name.
-from Grabber import Grabberu
+from shivu import shivuu
+
+Grabberu = shivuu
 
 ENDPOINT = "https://sasta-api.vercel.app/googleImageSearch"
 httpx_client = httpx.AsyncClient(timeout=60)

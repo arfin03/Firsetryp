@@ -1,7 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
 from datetime import datetime, timedelta
-from pyrogram import filters
 
 from shivu import application, user_collection, shivuu
 
@@ -10,7 +9,6 @@ SUPPORT_GROUP_LINK = "https://t.me/dark_world_231"
 
 async def bonus(update: Update, context: CallbackContext):
     user_id = update.message.from_user.id
-    user_name = update.message.from_user.first_name  # Get the user's first name
 
     # Check if the user is a member of the support group
     user_support_group = await context.bot.get_chat_member(GROUP_ID, user_id)
@@ -20,32 +18,14 @@ async def bonus(update: Update, context: CallbackContext):
         await update.message.reply_text("To claim the bonus, please join our support group: {}".format(SUPPORT_GROUP_LINK))
         return
 
-    # Check if the user has claimed the bonus this week
-    user_data = await user_collection.find_one({'id': user_id}, projection={'last_bonus_claim': 1})
-
-    if user_data and user_data.get('last_bonus_claim') is not None:
-        last_claimed_date = user_data['last_bonus_claim']
-        current_date = datetime.utcnow()
-
-        # Calculate the difference in days since the last claim
-        days_since_last_claim = (current_date - last_claimed_date).days
-
-        if days_since_last_claim < 7:
-            # User has already claimed the bonus this week
-            await update.message.reply_text("You have already claimed the bonus this week. You can claim again next week.")
-            return
-
     # Provide a button to claim the bonus
-    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Claim Bonus", callback_data='claim_bonus')]])
+    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Claim Bonus", callback_data=f'claim_bonus_{update.message.message_id}')]])
     await update.message.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
 
-
-
-# Function to handle button click for claiming bonus
-@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
     user_name = callback_query.from_user.first_name  # Get the user's first name
+    message_id = int(callback_query.data.split('_')[-1])  # Extract the message ID
 
     # Check if user has claimed the bonus within the last week
     user_data = await user_collection.find_one({"id": user_id})
@@ -72,7 +52,7 @@ async def claim_bonus_button(client, callback_query):
     await callback_query.answer()
 
     # Delete the message with the button
-    await callback_query.message.delete()
+    await callback_query.bot.delete_message(callback_query.message.chat_id, message_id)
 
 
 # Add the /bonus command handler

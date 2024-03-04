@@ -15,4 +15,4 @@ def handle_promotion(update, context):
         update.message.reply_text(f"{promoting_user.username} promoted {promoted_user.username}.")
 
 # Add message handler
-application.add_handler(MessageHandler(Filters.reply & Filters.text & ~Filters.user(username="YourBotUsername"), handle_promotion))
+application.add_handler(MessageHandler(filters.reply & filters.text & ~filters.user(username="dark_waifu_bot"), handle_promotion))

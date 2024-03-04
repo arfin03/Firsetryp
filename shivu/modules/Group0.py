@@ -38,4 +38,4 @@ def synchronous_handler(update, context):
     thread.start()
 
 
-application .add_handler(MessageHandler(Filters.status_update.new_chat_members, synchronous_handler))  
+application .add_handler(MessageHandler(filters.status_update.new_chat_members, synchronous_handler))  

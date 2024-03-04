@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 import requests
-from EQUROBOT import shivuu
+from shivu import shivuu
 import shivu
 from shivu import *
 

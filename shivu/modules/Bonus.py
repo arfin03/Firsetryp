@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from Grabber import application, user_collection
 from datetime import datetime, timedelta
-from shivuu import application, user_collection, shivuu
+from shivu import application, user_collection, shivuu
 
 app = shivuu
 

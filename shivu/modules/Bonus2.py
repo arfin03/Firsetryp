@@ -42,13 +42,14 @@ async def bonus(update: Update, context: CallbackContext):
 @shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
+    user_name = callback_query.from_user.first_name  # Get the user's first name
 
     # Check if user has claimed the bonus within the last week
     user_data = await user_collection.find_one({"id": user_id})
     if user_data:
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=7):
-            await callback_query.message.reply_text("You have already claimed your bonus this week. Please try again next week.")
+            await callback_query.message.reply_text("{user_name} have already claimed your bonus this week. Please try again next week.")
             return
 
     # Give bonus coins to the user
@@ -62,12 +63,11 @@ async def claim_bonus_button(client, callback_query):
     else:
         await user_collection.insert_one({"id": user_id, "balance": bonus_coins, "last_claim_time": datetime.now()})
         
-    await callback_query.message.reply_text("Congratulations! You received a bonus of 400 coins for joining the support group!")
+    # Send a message to the user with their bonus and name
+    await callback_query.message.reply_text(f"Congratulations ! You received a bonus of {bonus_coins} coins for joining the support group!")
 
     # Close the button after claiming the bonus
     await callback_query.answer()
 
 # Add the /bonus command handler
 application.add_handler(CommandHandler("bonus", bonus))
-
-

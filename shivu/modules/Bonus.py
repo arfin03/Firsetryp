@@ -44,7 +44,7 @@ async def button(update, context):
 # To add the command handler, you can use the same function as before:
 @app.on_message(filters.command("bonus"))
 async def bonus(update, context):
-    user_id = update.message.from_user.id
+    user_id = update.from_user.id
     keyboard = [[InlineKeyboardButton("Claim Bonus", callback_data='claim_bonus')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text("You're eligible for the weekly bonus! Click the button below to claim it.", reply_markup=reply_markup)

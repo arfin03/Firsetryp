@@ -46,6 +46,12 @@ async def bonus(update: Update, context: CallbackContext):
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
 
+    # Check if user has previously invoked the /bonus command
+    user_data = await user_collection.find_one({"id": user_id, "has_claimed_bonus": True})
+    if not user_data:
+        await callback_query.answer("This button is not for you.")
+        return
+
     # Check if user has claimed the bonus within the last week
     user_data = await user_collection.find_one({"id": user_id})
     if user_data:

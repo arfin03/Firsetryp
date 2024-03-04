@@ -10,7 +10,7 @@ from shivu import pm_users as collection
 
 collection = db['total_pm_users']
 
-NAME = dark dream world 
+NAME = "ᴅᴀʀᴋ ᴅʀᴇᴀᴍ ᴡᴏʀʟᴅ"
 gc_link = f'<a href="thttps://t.me/dark_world_231">{NAME}</a>'
 
 async def start(update: Update, context: CallbackContext) -> None:

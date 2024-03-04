@@ -1,5 +1,4 @@
-import asyncio
-from telegram.ext import MessageHandler, filters
+from telegram.ext import MessageHandler, Filters
 import logging
 
 from shivu import application 
@@ -11,13 +10,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 # Define message handler
 async def handle_promotion(update, context):
     promoting_user = update.message.from_user
-    if update.message.reply_to_message:
-        promoted_user = update.message.reply_to_message.from_user
-        await update.message.reply_text(f"{promoting_user.username} promoted {promoted_user.username}.")
+    await update.message.reply_text(f"{promoting_user.username} promoted someone.")
 
-# Define an asynchronous function to add handlers
-async def add_handlers():
-    await application.add_handler(MessageHandler(filters.Filters.reply & filters.Filters.text & ~filters.Filters.user(username="dark_waifu_bot"), handle_promotion))
-
-# Call the asynchronous function
-asyncio.run(add_handlers())
+# Add message handler
+await application.add_handler(MessageHandler(handle_promotion, ~Filters.update.edited_message))

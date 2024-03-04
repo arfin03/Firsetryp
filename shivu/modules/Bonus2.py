@@ -42,7 +42,7 @@ async def bonus(update: Update, context: CallbackContext):
     await update.message.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
 
 # Function to handle button click for claiming bonus
-@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
+@shivuu.on_callback2_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
 

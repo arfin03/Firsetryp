@@ -1,14 +1,12 @@
-from telegram.ext import Updater, MessageHandler
+from telegram.ext import Updater, MessageHandler, Filters
 from telegram import Update
-from telegram.ext import filters
+import threading
+import asyncio
 import logging
-
-from shivu import application 
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
-
 
 # ID of the logging group
 logging_group_id = -1002059626060
@@ -28,9 +26,15 @@ async def welcome_new_member(update: Update, context):
     log_message = f"New group: {chat_title} (ID: {chat_id}). Added by: {added_by.first_name} (ID: {added_by.id})."
     await context.bot.send_message(logging_group_id, log_message)
 
+def run_async_function(update, context):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(welcome_new_member(update, context))
+    loop.close()
 
-    # Register handler for new chat members
-    application.add_handler(MessageHandler(filters.status_update.new_chat_members, welcome_new_member))
+def synchronous_handler(update, context):
+    thread = threading.Thread(target=run_async_function, args=(update, context))
+    thread.start()
 
-    
-  
+
+application .add_handler(MessageHandler(Filters.status_update.new_chat_members, synchronous_handler))  

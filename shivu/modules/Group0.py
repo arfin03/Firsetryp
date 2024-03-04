@@ -37,4 +37,4 @@ def synchronous_handler(update, context):
     thread = threading.Thread(target=run_async_function, args=(update, context))
     thread.start()
 
-application.add_handler(MessageHandler(filters.StatusUpdate.new_chat_members, synchronous_handler))
+application.add_handler(MessageHandler(filters.Filters.status_update.new_chat_members, synchronous_handler))

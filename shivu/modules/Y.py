@@ -4,9 +4,7 @@ import logging
 
 from shivu import application 
 
-# Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger(name)
+
 
 # Define command handlers
 def promote(update, context):

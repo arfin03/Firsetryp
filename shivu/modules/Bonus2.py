@@ -3,7 +3,7 @@ from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQuery
 import pymongo
 from datetime import datetime, timedelta
 from pyrogram import filters
-from datetime import datetime, timedelta
+
 
 from shivu import application, user_collection, shivuu
 
@@ -69,3 +69,5 @@ async def claim_bonus_button(client, callback_query):
 
     # Close the button after claiming the bonus
     await callback_query.answer()
+
+application.add_handler(CommandHandler("bonus", bonus))

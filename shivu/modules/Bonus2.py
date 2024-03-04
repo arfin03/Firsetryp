@@ -40,7 +40,7 @@ async def claim_bonus_button(client, callback_query):
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=7):
             # If the user has already claimed the bonus this week, edit the existing message to inform them
-            await callback_query.bot.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
+            await client.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
                                                         text=f"You have already claimed your bonus this week, {user_name}. Please try again next week.")
             return
 
@@ -56,7 +56,7 @@ async def claim_bonus_button(client, callback_query):
         await user_collection.insert_one({"id": user_id, "balance": bonus_coins, "last_claim_time": datetime.now()})
         
     # Inform the user about the bonus
-    await callback_query.bot.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
+    await client.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
                                                 text=f"Congratulations, {user_name}! You received a bonus of {bonus_coins} coins for joining the support group!")
 
     # Close the button after claiming the bonus

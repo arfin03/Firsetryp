@@ -9,7 +9,8 @@ GROUP_ID = -1002059626060
 SUPPORT_GROUP_LINK = "https://t.me/dark_world_231"
 
 async def bonus(update: Update, context: CallbackContext):
-    user_id = update.message.from_user.id
+    user_id = callback_query.from_user.id
+    user_name = callback_query.from_user.first_name  # Get the user's first name
 
     # Check if the user is a member of the support group
     user_support_group = await context.bot.get_chat_member(GROUP_ID, user_id)

@@ -12,6 +12,8 @@ GROUP_ID = -1002059626060
 
 
 
+from telegram.error import Unauthorized
+
 # Function to handle /bonus command
 async def bonus(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
@@ -24,8 +26,8 @@ async def bonus(update: Update, context: CallbackContext):
             await update.message.reply_text("You have already claimed your bonus this week. Please try again next week.")
             return
 
-    # Check if user has joined the support group
     try:
+        # Check if user is a member of the group
         user_support_group = await context.bot.get_chat_member(GROUP_ID, user_id)
         if user_support_group.status == "member" or user_support_group.status == "administrator":
             # Provide a button to claim the bonus
@@ -40,6 +42,7 @@ async def bonus(update: Update, context: CallbackContext):
     except Exception as e:
         print(f"Error occurred: {e}")
         await update.message.reply_text("There was an error processing your request. Please try again later.")
+
 
 # Function to handle button click for claiming bonus
 @shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))

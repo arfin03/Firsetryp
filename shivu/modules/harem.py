@@ -65,7 +65,7 @@ async def harem(update: Update, context: CallbackContext, page=0) -> None:
                 count = character_counts[character_id]
                 # Replace rarity text with emoji
                 rarity_emoji = RARITY_EMOJIS.get(rarity, '❓')
-                harem_message += f'🆔{character_id}\n🔸{rarity_emoji}\n👁️‍🗨️{character["name"]} ×{count}\n'
+                harem_message += f'ID :{character_id}\nRARITY :{rarity_emoji}\nCHARACTER :{character["name"]} ×{count}\n'
             else:
                 # Handle the case when character information is not found in the database
                 count = character_counts[character_id]

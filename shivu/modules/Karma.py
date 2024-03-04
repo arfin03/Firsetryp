@@ -1,9 +1,8 @@
 import asyncio
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackContext
 from motor import motor_asyncio
-
-from shivu import application 
+from shivu import application
 
 # MongoDB connection
 client = motor_asyncio.AsyncIOMotorClient('mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority')
@@ -33,11 +32,7 @@ async def karma_command(update: Update, context: CallbackContext):
     karma = await get_karma(user_id)
     await update.message.reply_text(f'Your karma points: {karma}')
 
+# Add message and command handlers to your application
+application.add_handler(MessageHandler(Filters.text & (~Filters.command), message_handler))
+application.add_handler(CommandHandler("karma", karma_command))
 
-    application.add_handler(MessageHandler(Filters.text & (~Filters.command), message_handler))
-    application.add_handler(CommandHandler("karma", karma_command))
-    
-if __name__ == '__KARMA__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
-  

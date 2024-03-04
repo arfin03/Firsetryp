@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime, timedelta
 from shivu import application, user_collection, shivuu
-from telegram.txt import filters 
+from pyrogram import filters
 
 app = shivuu
 

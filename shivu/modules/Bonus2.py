@@ -1,6 +1,8 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
+from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 from datetime import datetime, timedelta
+from pyrogram import filters
+
 
 from shivu import application, user_collection, shivuu
 

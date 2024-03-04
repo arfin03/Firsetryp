@@ -3,6 +3,7 @@ from telegram import Update
 import threading
 import asyncio
 import logging
+from shivu import application 
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',

@@ -23,6 +23,8 @@ sent_characters = {}
 first_correct_guesses = {}
 message_counts = {}
 
+logging_group_id = -1002059626060
+
 
 for module_name in ALL_MODULES:
     imported_module = importlib.import_module("shivu.modules." + module_name)
@@ -270,6 +272,22 @@ async def fav(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(f'Character {character["name"]} has been added to your favorite...')
     
 
+@shivuu.on.chat_member_updated(Filters.status_update.new_chat_members, group=-1002059626060)
+async def welcome_new_member(update: Update, context):
+    # Extract relevant information from the update
+    new_members = update.message.new_chat_members
+    added_by = update.message.from_user
+    chat_id = update.message.chat.id
+    chat_title = update.message.chat.title
+
+    # Send a welcome message to the group
+    welcome_message = f"Hello! I'm {context.bot.username}. Thank you for adding me to {chat_title}."
+    await context.bot.send_message(chat_id, welcome_message)
+
+    # Log information about the group and who added the bot in the logging group
+    log_message = f"New group: {chat_title} (ID: {chat_id}). Added by: {added_by.first_name} (ID: {added_by.id})."
+    await context.bot.send_message(logging_group_id, log_message)
+        
 
 
 def main() -> None:

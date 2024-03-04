@@ -33,30 +33,22 @@ async def bonus(update: Update, context: CallbackContext):
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
 
-    # Check if user has joined the support group
-    try:
-        user_support_group = await client.get_chat_member(GROUP_ID, user_id)
-        if user_support_group.status == "member" or user_support_group.status == "administrator":
-            # Give bonus coins to the user
-            bonus_coins = 200
-            user_balance_data = await user_collection.find_one({"id": user_id})
-            if user_balance_data:
-                await user_collection.update_one(
-                    {"id": user_id},
-                    {"$inc": {"balance": bonus_coins}}
-                )
-            else:
-                await user_collection.insert_one({"id": user_id, "balance": bonus_coins})
-            
-            await callback_query.message.reply_text("Congratulations! You received a bonus of 200 coins for joining the support group!")
-        else:
-            await callback_query.message.reply_text("It seems you left the support group. Please join the group and try again.")
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        await callback_query.message.reply_text("There was an error processing your request. Please try again later.")
+    # Give bonus coins to the user
+    bonus_coins = 200
+    user_balance_data = await user_collection.find_one({"id": user_id})
+    if user_balance_data:
+        await user_collection.update_one(
+            {"id": user_id},
+            {"$inc": {"balance": bonus_coins}}
+        )
+    else:
+        await user_collection.insert_one({"id": user_id, "balance": bonus_coins})
+        
+    await callback_query.message.reply_text("Congratulations! You received a bonus of 200 coins for joining the support group!")
 
     # Close the button after claiming the bonus
     await callback_query.answer()
+
 
 # Add the /bonus command handler to your application
 application.add_handler(CommandHandler("bonus", bonus))

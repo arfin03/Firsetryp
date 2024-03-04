@@ -9,11 +9,6 @@ from shivu import application, user_collection, shivuu
 
 GROUP_ID = -1002059626060
 
-
-
-
-from telegram.error import Unauthorized
-
 # Function to handle /bonus command
 async def bonus(update: Update, context: CallbackContext):
     user_id = update.effective_user.id

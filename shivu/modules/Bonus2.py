@@ -24,7 +24,7 @@ async def bonus(update: Update, context: CallbackContext):
     try:
         # Check if user is a member of the group
         user_support_group = await context.bot.get_chat_member(GROUP_ID, user_id)
-        if user_support_group.status == "member" or user_support_group.status == "administrator":
+        if user_support_group and (user_support_group.status == "member" or user_support_group.status == "administrator"):
             # Provide a button to claim the bonus
             keyboard = [[InlineKeyboardButton("Claim Bonus", callback_data='claim_bonus')]]
             reply_markup = InlineKeyboardMarkup(keyboard)

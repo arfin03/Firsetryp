@@ -7,13 +7,15 @@ from pyrogram import filters
 
 from shivu import application, user_collection, shivuu
 
+GROUP_ID = -1002059626060
+
 
 async def bonus(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
 
     # Check if user has joined the support group
     try:
-        user_support_group = await context.bot.get_chat_member("dark_world_231", user_id)
+        user_support_group = await context.bot.get_chat_member(GROUP_ID, user_id)
         if user_support_group.status == "member" or user_support_group.status == "administrator":
             # Provide a button to claim the bonus
             keyboard = [[InlineKeyboardButton("Claim Bonus", callback_data='claim_bonus')]]
@@ -33,7 +35,7 @@ async def claim_bonus_button(client, callback_query):
 
     # Check if user has joined the support group
     try:
-        user_support_group = await client.get_chat_member("dark_world_231", user_id)
+        user_support_group = await client.get_chat_member(GROUP_ID, user_id)
         if user_support_group.status == "member" or user_support_group.status == "administrator":
             # Give bonus coins to the user
             bonus_coins = 200

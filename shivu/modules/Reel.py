@@ -6,7 +6,7 @@ from shivu import *
 
 app = shivuu
 
-@app.on_message(filters.command("og"))
+@app.on_message(filters.command("reel"))
 async def download_instagram_reel(client, message):
     try:
         if len(message.text.split(" ")) == 1:

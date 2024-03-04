@@ -49,8 +49,10 @@ async def claim_bonus_button(client, callback_query):
     if user_data:
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=7):
-            await callback_query.message.reply_text("{user_name} have already claimed your bonus this week. Please try again next week.")
-            return
+           user_name = (await client.get_chat_member(GROUP_ID, user_id)).user.first_name
+             await callback_query.message.reply_text(f"{user_name}, you have already claimed your bonus this week. Please try again next week.")
+    return
+
 
     # Give bonus coins to the user
     bonus_coins = 400

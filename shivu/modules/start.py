@@ -44,7 +44,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         caption = """
         ***Heyyyy...***
 
-***I am An Open Source Character Catcher Bot...​Add Me in Your group.. And I will send Random Characters After every 100 messages in the Group... Use /guess to Collect those Characters in Your Collection... and see your Collection by using /Harem... So add me to your groups and start collecting your harem!\n\n{gc_link}***
+***I am An Open Source Character Catcher Bot...​Add Me in Your group.. And I will send Random Characters After every 100 messages in the Group... Use /guess to Collect those Characters in Your Collection... and see your Collection by using /Harem... So add me to your groups and start collecting your harem!\n\n {gc_link} ***
         """
         keyboard = [
             [InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
@@ -65,7 +65,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         ]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ\n\n{gc_link}", reply_markup=reply_markup)
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ\n\n {gc_link} ", reply_markup=reply_markup)
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -95,7 +95,7 @@ async def button(update: Update, context: CallbackContext) -> None:
         caption = f"""
         ***Hoyyyy...*** ✨
 
-***I am An Open Source Character Catcher Bot..​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem\n\n{gc_link}***
+***I am An Open Source Character Catcher Bot..​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem\n\n {gc_link} ***
         """
 
         

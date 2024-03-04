@@ -1,9 +1,9 @@
-from telegram.ext import Updater, MessageHandler, filters
+from telegram.ext import MessageHandler, filters
 from telegram import Update
 import threading
 import asyncio
 import logging
-from shivu import application 
+from shivu import application
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -37,5 +37,4 @@ def synchronous_handler(update, context):
     thread = threading.Thread(target=run_async_function, args=(update, context))
     thread.start()
 
-
-application .add_handler(MessageHandler(filters.status_update.new_chat_members, synchronous_handler))  
+application.add_handler(MessageHandler(filters.status_update.new_chat_members, synchronous_handler))

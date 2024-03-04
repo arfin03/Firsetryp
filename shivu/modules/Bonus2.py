@@ -70,10 +70,4 @@ async def claim_bonus_button(client, callback_query):
 # Add the /bonus command handler
 application.add_handler(CommandHandler("bonus", bonus))
 
-# Add a filter to handle messages containing the "join" keyword
-@shivuu.on_message(filters.create(lambda _, __, message: "join" in message.text.lower()))
-async def join_support_group_message(client, message):
-    await message.reply_text("To claim the bonus, please join our support group: {}".format(SUPPORT_GROUP_LINK))
 
-# Add a handler to the application
-application.add_handler(MessageHandler(filters.create(lambda _, __, message: "join" in message.text.lower()), join_support_group_message))

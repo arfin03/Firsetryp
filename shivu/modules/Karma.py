@@ -1,6 +1,6 @@
 import asyncio
 from telegram import Update
-from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 from motor import motor_asyncio
 from shivu import application
 
@@ -33,6 +33,6 @@ async def karma_command(update: Update, context: CallbackContext):
     await update.message.reply_text(f'Your karma points: {karma}')
 
 # Add message and command handlers to your application
-application.add_handler(MessageHandler(Filters.text & (~Filters.command), message_handler))
+application.add_handler(MessageHandler(filters.Filters.text & (~filters.Filters.command), message_handler))
 application.add_handler(CommandHandler("karma", karma_command))
 

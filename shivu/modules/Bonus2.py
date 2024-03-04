@@ -22,6 +22,8 @@ async def bonus(update: Update, context: CallbackContext):
     keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Claim Bonus", callback_data=f'claim_bonus_{update.message.message_id}')]])
     await update.message.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
 
+# Function to handle button click for claiming bonus
+@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
     user_name = callback_query.from_user.first_name  # Get the user's first name

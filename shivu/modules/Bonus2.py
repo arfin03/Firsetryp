@@ -49,7 +49,7 @@ async def claim_bonus_button(client, callback_query):
     # Check if user has previously invoked the /bonus command
     user_data = await user_collection.find_one({"id": user_id, "has_claimed_bonus": True})
     if not user_data:
-        await callback_query.answer("This button is not for you.")
+        await callback2_query.answer("This button is not for you.")
         return
 
     # Check if user has claimed the bonus within the last week
@@ -57,7 +57,7 @@ async def claim_bonus_button(client, callback_query):
     if user_data:
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=7):
-            await callback_query.message.reply_text("You have already claimed your bonus this week. Please try again next week.")
+            await callback2_query.message.reply_text("You have already claimed your bonus this week. Please try again next week.")
             return
 
     # Give bonus coins to the user
@@ -71,10 +71,10 @@ async def claim_bonus_button(client, callback_query):
     else:
         await user_collection.insert_one({"id": user_id, "balance": bonus_coins, "last_claim_time": datetime.now()})
         
-    await callback_query.message.reply_text("Congratulations! You received a bonus of 400 coins for joining the support group!")
+    await callback2_query.message.reply_text("Congratulations! You received a bonus of 400 coins for joining the support group!")
 
     # Close the button after claiming the bonus
-    await callback_query.answer()
+    await callback2_query.answer()
 
 # Add the /bonus command handler
 application.add_handler(CommandHandler("bonus", bonus))

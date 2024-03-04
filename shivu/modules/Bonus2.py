@@ -11,11 +11,11 @@ GROUP_ID = -1002059626060
 
 SUPPORT_GROUP_LINK = "https://t.me/dark_world_231"
 
-async def bonus(update, context):
+async def bonus(client, update):
     user_id = update.from_user.id
 
     # Check if the user is a member of the support group
-    user_support_group = await context.bot.get_chat_member("@SUPPORT_GROUP_NAME", user_id)
+    user_support_group = await client.get_chat_member("@dark_world_231", user_id)
 
     if user_support_group.status == "left":
         # User is not a member, prompt them to join the support group
@@ -40,7 +40,6 @@ async def bonus(update, context):
     # Provide a button to claim the bonus
     keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Claim Bonus", callback_data='claim_bonus')]])
     await update.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
-
 
 # Function to handle button click for claiming bonus
 @shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))

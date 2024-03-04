@@ -1,13 +1,29 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler, MessageHandler, Filters
+import threading
+import asyncio
+import logging
+import random
+from html import escape
 from itertools import groupby
 import math
-from html import escape 
-import random
-
-from telegram.ext import CommandHandler, CallbackContext, CallbackQueryHandler
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from shivu import collection, user_collection, application
+
+
+# ID of the logging group
+logging_group_id = -1002059626060
+
+# Dictionary mapping rarity to emojis
+RARITY_EMOJIS = {
+    '⚪ Common': '⚪',
+    '🟡 Legendary': '🟡',
+    '🟢 Medium': '🟢',
+    '🟣 Rare': '🟣',
+    '💮 Special edition': '💮',
+    '🔮 Limited Edition': '🔮',
+    '💸 Premium Edition': '💸',
+}
 
 async def harem(update: Update, context: CallbackContext, page=0) -> None:
     user_id = update.effective_user.id
@@ -47,7 +63,9 @@ async def harem(update: Update, context: CallbackContext, page=0) -> None:
             if db_character:
                 rarity = db_character.get('rarity', 'Unknown Rarity')
                 count = character_counts[character_id]
-                harem_message += f'{character_id} ({rarity}) {character["name"]} ×{count}\n'
+                # Replace rarity text with emoji
+                rarity_emoji = RARITY_EMOJIS.get(rarity, '❓')
+                harem_message += f'{character_id} ({rarity_emoji}) {character["name"]} ×{count}\n'
             else:
                 # Handle the case when character information is not found in the database
                 count = character_counts[character_id]
@@ -118,7 +136,6 @@ async def harem_callback(update: Update, context: CallbackContext) -> None:
 
     await harem(update, context, page)
 
-application.add_handler(CommandHandler(["harem", "collection"], harem,block=False))
+application.add_handler(CommandHandler(["harem", "collection"], harem, block=False))
 harem_handler = CallbackQueryHandler(harem_callback, pattern='^harem', block=False)
 application.add_handler(harem_handler)
-    

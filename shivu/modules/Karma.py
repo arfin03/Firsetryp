@@ -33,6 +33,6 @@ async def karma_command(update: Update, context: CallbackContext):
     await update.message.reply_text(f'Your karma points: {karma}')
 
 # Add message and command handlers to your application
-application.add_handler(MessageHandler(Filters.text & (~Filters.command), message_handler))
+application.add_handler(MessageHandler(filters.Filters.text & (~Filters.command), message_handler))
 application.add_handler(CommandHandler("karma", karma_command))
 

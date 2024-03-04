@@ -1,4 +1,5 @@
 import random
+import html
 from html import escape 
 from pyrogram import idle
 
@@ -54,7 +55,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown', parse_mode='HTML')
 
     else:
         photo_url = random.choice(image_urls)
@@ -65,7 +66,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         ]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ\n\n {gc_link} ", reply_markup=reply_markup)
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ\n\n {gc_link} ", reply_markup=reply_markup, parse_mode='HTML')
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query

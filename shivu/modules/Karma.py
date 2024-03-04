@@ -37,7 +37,7 @@ async def karma_command(update: Update, context: CallbackContext):
     application.add_handler(MessageHandler(Filters.text & (~Filters.command), message_handler))
     application.add_handler(CommandHandler("karma", karma_command))
     
-if __nane__ == '__KARMA__':
+if __name__ == '__KARMA__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
   

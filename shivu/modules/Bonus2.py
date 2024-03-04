@@ -1,25 +1,22 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CommandHandler, CallbackContext, Updater, CallbackQueryHandler
-import pymongo
+from telegram.ext import CommandHandler
 from datetime import datetime, timedelta
 from pyrogram import filters
-
 
 from shivu import application, user_collection, shivuu
 
 GROUP_ID = -1002059626060
-
 SUPPORT_GROUP_LINK = "https://t.me/dark_world_231"
 
-async def bonus(client, update):
-    user_id = update.from_user.id
+async def bonus(update: Update, context: CallbackContext):
+    user_id = update.message.from_user.id
 
     # Check if the user is a member of the support group
-    user_support_group = await client.get_chat_member("@dark_world_231", user_id)
+    user_support_group = await context.bot.get_chat_member(GROUP_ID, user_id)
 
     if user_support_group.status == "left":
         # User is not a member, prompt them to join the support group
-        await update.reply_text("To claim the bonus, please join our support group: {}".format(SUPPORT_GROUP_LINK))
+        await update.message.reply_text("To claim the bonus, please join our support group: {}".format(SUPPORT_GROUP_LINK))
         return
 
     # Check if the user has claimed the bonus this week
@@ -34,12 +31,12 @@ async def bonus(client, update):
 
         if days_since_last_claim < 7:
             # User has already claimed the bonus this week
-            await update.reply_text("You have already claimed the bonus this week. You can claim again next week.")
+            await update.message.reply_text("You have already claimed the bonus this week. You can claim again next week.")
             return
 
     # Provide a button to claim the bonus
     keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Claim Bonus", callback_data='claim_bonus')]])
-    await update.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
+    await update.message.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
 
 # Function to handle button click for claiming bonus
 @shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
@@ -70,4 +67,5 @@ async def claim_bonus_button(client, callback_query):
     # Close the button after claiming the bonus
     await callback_query.answer()
 
+# Add the /bonus command handler
 application.add_handler(CommandHandler("bonus", bonus))

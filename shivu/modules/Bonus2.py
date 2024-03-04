@@ -22,10 +22,13 @@ async def bonus(update: Update, context: CallbackContext):
 
     # Provide a button to claim the bonus
     keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Claim Bonus", callback_data=f'claim_bonus_{update.message.message_id}')]])
-    await update.message.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
+    message = await update.message.reply_text("You can claim your bonus by clicking the button below.", reply_markup=keyboard)
+
+    # Store the message ID in the user data
+    await user_collection.update_one({"id": user_id}, {"$set": {"bonus_message_id": message.message_id}})
 
 # Function to handle button click for claiming bonus
-@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data == "claim_bonus"))
+@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data.startswith("claim_bonus")))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
     user_name = callback_query.from_user.first_name  # Get the user's first name
@@ -36,7 +39,9 @@ async def claim_bonus_button(client, callback_query):
     if user_data:
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=7):
-            await callback_query.message.reply_text("You have already claimed your bonus this week. Please try again next week.")
+            # If the user has already claimed the bonus this week, edit the existing message to inform them
+            await callback_query.bot.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
+                                                        text=f"You have already claimed your bonus this week, {user_name}. Please try again next week.")
             return
 
     # Give bonus coins to the user
@@ -50,14 +55,12 @@ async def claim_bonus_button(client, callback_query):
     else:
         await user_collection.insert_one({"id": user_id, "balance": bonus_coins, "last_claim_time": datetime.now()})
         
-    await callback_query.message.reply_text(f"Congratulations, {user_name}! You received a bonus of {bonus_coins} coins for joining the support group!")
+    # Inform the user about the bonus
+    await callback_query.bot.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
+                                                text=f"Congratulations, {user_name}! You received a bonus of {bonus_coins} coins for joining the support group!")
 
     # Close the button after claiming the bonus
     await callback_query.answer()
-
-    # Delete the message with the button
-    await callback_query.bot.delete_message(callback_query.message.chat_id, message_id)
-
 
 # Add the /bonus command handler
 application.add_handler(CommandHandler("bonus", bonus))

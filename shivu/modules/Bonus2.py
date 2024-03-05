@@ -25,7 +25,7 @@ async def bonus(update: Update, context: CallbackContext):
     await user_collection.update_one({"id": user_id}, {"$set": {"bonus_message_id": message.message_id}})
 
 # Function to handle button click for claiming bonus
-@shivuu.on_callback_query()
+@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data.startswith("claim_bonus")))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
     user_name = callback_query.from_user.first_name  # Get the user's first name
@@ -71,4 +71,10 @@ async def claim_bonus_button(client, callback_query):
     # Delete the message with the button
     await client.delete_message(callback_query.message.chat.id, message_id)
 
+# Add the callback for the /bonus command
 application.add_handler(CommandHandler("bonus", bonus))
+
+# Add a dummy callback handler for the other file to prevent it from handling callback queries
+@shivuu.on_callback_query()
+async def dummy_callback_handler(client, callback_query):
+    pass

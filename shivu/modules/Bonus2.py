@@ -25,7 +25,7 @@ async def bonus(update: Update, context: CallbackContext):
     await user_collection.update_one({"id": user_id}, {"$set": {"bonus_message_id": message.message_id}})
 
 # Function to handle button click for claiming bonus
-@shivuu.on_callback_query(filters.create(lambda _, __, query: query.data.startswith("claim_bonus")))
+@shivuu.on_callback_query(Filters.regex(r'^claim_bonus'))
 async def claim_bonus_button(client, callback_query):
     user_id = callback_query.from_user.id
     user_name = callback_query.from_user.first_name  # Get the user's first name

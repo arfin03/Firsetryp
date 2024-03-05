@@ -21,7 +21,7 @@ from shivu.config import Development as Config
 OWNER_ID = '6655070772'
 sudo_users = ["6655070772", "6090374191", "6655070772", "5297949798", "6655070772", "5955023340"]
 GROUP_ID = "-1002059626060"
-TOKEN = "6786511875:AAH1ak-v8ZGN0VuPPv5NlbuPl9jxZWh3H_g"
+TOKEN = "6786511875:AAGGM-y9P4N3hEjFS6Aj_rYuYt7RAPObVdY"
 mongo_url = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.net/?retryWrites=true&w=majority"
 PHOTO_URL = ["https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg", "https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg"]
 SUPPORT_CHAT = "dark_world_231"

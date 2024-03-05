@@ -71,5 +71,6 @@ async def claim_bonus_button(client, callback_query):
     # Close the button after claiming the bonus
     await callback_query.answer()
 
-# Add the /bonus command handler
-application.add_handler(CommandHandler("bonus", bonus))
+    # Delete the message with the button
+    await client.delete_message(callback_query.message.chat.id, message_id)
+

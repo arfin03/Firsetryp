@@ -34,14 +34,23 @@ async def claim_bonus_button(client, callback_query):
     user_name = callback_query.from_user.first_name  # Get the user's first name
     message_id = int(callback_query.data.split('_')[-1])  # Extract the message ID
 
+    # Check if the user is a member of the support group
+    user_support_group = await client.get_chat_member(GROUP_ID, user_id)
+
+    if user_support_group.status == "left":
+        # User is not a member, inform them to join the support group first
+        await client.edit_message_text(chat_id=callback_query.message.chat.id, message_id=message_id,
+                                        text=f"You need to join our support group first, {user_name}. Click here: {SUPPORT_GROUP_LINK}")
+        return
+
     # Check if user has claimed the bonus within the last week
     user_data = await user_collection.find_one({"id": user_id})
     if user_data:
         last_claim_time = user_data.get('last_claim_time')
         if last_claim_time and datetime.now() - last_claim_time < timedelta(days=7):
             # If the user has already claimed the bonus this week, edit the existing message to inform them
-            await client.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
-                                                        text=f"You have already claimed your bonus this week, {user_name}. Please try again next week.")
+            await client.edit_message_text(chat_id=callback_query.message.chat.id, message_id=message_id,
+                                            text=f"You have already claimed your bonus this week, {user_name}. Please try again next week.")
             return
 
     # Give bonus coins to the user
@@ -56,8 +65,8 @@ async def claim_bonus_button(client, callback_query):
         await user_collection.insert_one({"id": user_id, "balance": bonus_coins, "last_claim_time": datetime.now()})
         
     # Inform the user about the bonus
-    await client.edit_message_text(chat_id=callback_query.message.chat_id, message_id=message_id,
-                                                text=f"Congratulations, {user_name}! You received a bonus of {bonus_coins} coins for joining the support group!")
+    await client.edit_message_text(chat_id=callback_query.message.chat.id, message_id=message_id,
+                                    text=f"Congratulations, {user_name}! You received a bonus of {bonus_coins} coins for joining the support group!")
 
     # Close the button after claiming the bonus
     await callback_query.answer()

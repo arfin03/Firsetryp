@@ -252,7 +252,7 @@ async def lego(update, context):
     quew = context.args
     if not quew:
         await event.reply_text(
-            "Darling, please give me some text to create a logo!\nExample `/logo <Neko>`"
+            "Darling, please give me some text to create a logo!\nExample /logo sukuna"
         )
         return
 
@@ -296,7 +296,7 @@ async def vip_logo_handler(update, context):
 
     if len(quew) < 2:
         await event.reply_text(
-            "Please provide both an image URL and text to create a logo!\nExample: `/logo <image_url> <text>`"
+            "Please provide both an image URL and text to create a logo!\nExample: /viplogo <image_url> <text>"
         )
         return
 

@@ -86,12 +86,28 @@ async def harem(update: Update, context: CallbackContext, page=0) -> None:
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if 'favorites' in user and user['favorites']:
-        fav_character_id = user['favorites'][0]
-        fav_character = next((c for c in user['characters'] if c['id'] == fav_character_id), None)
+    fav_character_id = user['favorites'][0]
+    fav_character = next((c for c in user['characters'] if c['id'] == fav_character_id), None)
 
-        if fav_character and 'img_url' in fav_character:
+    if fav_character and 'img_url' in fav_character and fav_character['img_url']:
+        if update.message:
+            await update.message.reply_photo(photo=fav_character['img_url'], parse_mode='HTML', caption=harem_message, reply_markup=reply_markup)
+        else:
+            if update.callback_query.message.caption != harem_message:
+                await update.callback_query.edit_message_caption(caption=harem_message, reply_markup=reply_markup, parse_mode='HTML')
+    else:
+        if update.message:
+            await update.message.reply_text(harem_message, parse_mode='HTML', reply_markup=reply_markup)
+        else:
+            if update.callback_query.message.text != harem_message:
+                await update.callback_query.edit_message_text(harem_message, parse_mode='HTML', reply_markup=reply_markup)
+else:
+    if user['characters']:
+        random_character = random.choice(user['characters'])
+
+        if 'img_url' in random_character and random_character['img_url']:
             if update.message:
-                await update.message.reply_photo(photo=fav_character['img_url'], parse_mode='HTML', caption=harem_message, reply_markup=reply_markup)
+                await update.message.reply_photo(photo=random_character['img_url'], parse_mode='HTML', caption=harem_message, reply_markup=reply_markup)
             else:
                 if update.callback_query.message.caption != harem_message:
                     await update.callback_query.edit_message_caption(caption=harem_message, reply_markup=reply_markup, parse_mode='HTML')
@@ -102,24 +118,9 @@ async def harem(update: Update, context: CallbackContext, page=0) -> None:
                 if update.callback_query.message.text != harem_message:
                     await update.callback_query.edit_message_text(harem_message, parse_mode='HTML', reply_markup=reply_markup)
     else:
-        if user['characters']:
-            random_character = random.choice(user['characters'])
+        if update.message:
+            await update.message.reply_text("Your List is Empty :)")
 
-            if 'img_url' in random_character:
-                if update.message:
-                    await update.message.reply_photo(photo=random_character['img_url'], parse_mode='HTML', caption=harem_message, reply_markup=reply_markup)
-                else:
-                    if update.callback_query.message.caption != harem_message:
-                        await update.callback_query.edit_message_caption(caption=harem_message, reply_markup=reply_markup, parse_mode='HTML')
-            else:
-                if update.message:
-                    await update.message.reply_text(harem_message, parse_mode='HTML', reply_markup=reply_markup)
-                else:
-                    if update.callback_query.message.text != harem_message:
-                        await update.callback_query.edit_message_text(harem_message, parse_mode='HTML', reply_markup=reply_markup)
-        else:
-            if update.message:
-                await update.message.reply_text("Your List is Empty :)")
 
 async def harem_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query

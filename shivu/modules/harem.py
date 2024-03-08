@@ -151,23 +151,3 @@ async def harem_callback(update: Update, context: CallbackContext) -> None:
 application.add_handler(CommandHandler(["harem", "collection"], harem, block=False))
 harem_handler = CallbackQueryHandler(harem_callback, pattern='^harem', block=False)
 application.add_handler(harem_handler)
-rem_callback(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    data = query.data
-
-    _, page, user_id = data.split(':')
-
-    page = int(page)
-    user_id = int(user_id)
-
-    if query.from_user.id != user_id:
-        await query.answer("It's Not Your Harem", show_alert=True)
-        return
-
-    await harem(update, context, page)
-
-application.add_handler(CommandHandler(["harem", "collection"], harem, block=False))
-harem_handler = CallbackQueryHandler(harem_callback, pattern='^harem', block=False)
-application.add_handler(harem_handler)
-
-

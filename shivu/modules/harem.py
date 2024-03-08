@@ -85,9 +85,9 @@ async def harem(update: Update, context: CallbackContext, page=0) -> None:
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    if 'favorites' in user and user['favorites']:
-        fav_character_id = user['favorites'][0]
-        fav_character = next((c for c in user['characters'] if c['id'] == fav_character_id), None)
+if 'favorites' in user and user['favorites']:
+    fav_character_id = user['favorites'][0]
+    fav_character = next((c for c in user['characters'] if c['id'] == fav_character_id), None)
 
     if fav_character and 'img_url' in fav_character and fav_character['img_url']:
         if update.message:
@@ -120,6 +120,7 @@ else:
     else:
         if update.message:
             await update.message.reply_text("Your List is Empty :)")
+
 
 
 async def harem_callback(update: Update, context: CallbackContext) -> None:

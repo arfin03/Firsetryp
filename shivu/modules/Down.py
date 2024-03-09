@@ -2,6 +2,7 @@ from telegram import Update, ChatMember
 from telegram.ext import CommandHandler, CallbackContext
 from pymongo import MongoClient
 from shivu import application
+from telegram.ext import MemberStatus
 
 # MongoDB connection
 client = MongoClient("mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority")
@@ -16,7 +17,7 @@ CHANNEL_USERNAME = "SUKUNA_UPDATE_CHANNEL"
 async def check_membership(update: Update, context: CallbackContext) -> bool:
     user_id = update.effective_user.id
     chat_member = await context.bot.get_chat_member(CHANNEL_ID, user_id)
-    return chat_member.status in [ChatMember.MEMBER, ChatMember.CREATOR, ChatMember.ADMINISTRATOR]
+    return chat_member.status in [MemberStatus.MEMBER, MemberStatus.ADMINISTRATOR]
 
 # Function to handle the /up command
 async def upload(update: Update, context: CallbackContext):

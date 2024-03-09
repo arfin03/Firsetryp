@@ -35,8 +35,7 @@ async def upload(update: Update, context: CallbackContext):
 # Function to handle the /down command
 async def download(update: Update, context: CallbackContext):
     if not await check_membership(update, context):
-        bot_link = context.bot.get_me().username
-        await update.message.reply_text(f"You need to be a member of the channel to download images. Join the channel here: https://t.me/{bot_link}?start=channel")
+        await update.message.reply_text(f"You need to be a member of the channel to download images. Join the channel here: @{CHANNEL_USERNAME}")
         return
 
     # Extracting the id from the command

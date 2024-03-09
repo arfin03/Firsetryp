@@ -13,7 +13,7 @@ CHANNEL_ID = -1002114813114
 CHANNEL_USERNAME = "SUKUNA_UPDATE_CHANNEL"
 
 # Function to check if user is a member of the channel
-async def check_membership(update: Update) -> bool:
+async def check_membership(update: Update, context: CallbackContext) -> bool:
     user_id = update.effective_user.id
     chat_member = await context.bot.get_chat_member(CHANNEL_ID, user_id)
     return chat_member.status in [ChatMember.MEMBER, ChatMember.CREATOR, ChatMember.ADMINISTRATOR]
@@ -35,9 +35,9 @@ async def upload(update: Update, context: CallbackContext):
 
 # Function to handle the /down command
 async def download(update: Update, context: CallbackContext):
-    if not await check_membership(update):
+    if not await check_membership(update, context):
         bot_link = context.bot.get_me().username
-        await update.message.reply_text(f"You need to be a member of the channel to download images. Join the channel here: @SUKUNA_UPDATE_CHANNEL")
+        await update.message.reply_text(f"You need to be a member of the channel to download images. Join the channel here: https://t.me/{bot_link}?start=channel")
         return
 
     # Extracting the id from the command

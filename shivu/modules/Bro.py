@@ -29,11 +29,7 @@ async def send_message(update: Update, context: CallbackContext) -> None:
     # Create the inline keyboard buttons
     keyboard = [
         [
-            InlineKeyboardButton("🎀Aᴅᴅ Tᴏ Yᴏᴜʀ Gʀᴏᴜᴘ🎀", url="http://t.me/Dark_waifu_Bot?startgroup=new")
-        ],
-        [
-            InlineKeyboardButton("📢Sᴜᴘᴘᴏʀᴛ📢", url="https://t.me/dark_world_231"),
-            InlineKeyboardButton("🔔Uᴘᴅᴀᴛᴇ🔔", url="https://t.me/SUKUNA_UPDATE_CHANNEL")
+            InlineKeyboardButton("Jᴏɪɴ ᴘғᴘ ᴄʜᴇɴɴᴀʟ", url="https://t.me/DipanshX")
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)

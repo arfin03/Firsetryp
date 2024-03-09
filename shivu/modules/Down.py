@@ -15,7 +15,16 @@ CHANNEL_USERNAME = "SUKUNA_UPDATE_CHANNEL"
 async def check_membership(update: Update, context: CallbackContext) -> bool:
     user_id = update.effective_user.id
     chat_member = await context.bot.get_chat_member(CHANNEL_ID, user_id)
-    return chat_member.status in ['member', 'administrator']
+    if chat_member.status in ['member', 'administrator']:
+        return True
+    else:
+        # Check if user is already joined the channel but not an active member
+        user = await context.bot.get_chat_member(CHANNEL_ID, user_id)
+        if user.is_member():
+            return True
+        else:
+            return False
+
 
 # Function to handle the /up command
 async def upload(update: Update, context: CallbackContext):

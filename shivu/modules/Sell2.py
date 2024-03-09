@@ -14,10 +14,17 @@ rarity_coin_mapping = {
     "🔮 Limited Edition": 240
 }
 
+rarity = character.get('rarity', 'Unknown Rarity')
+    coin_cost = rarity_coin_mapping.get(rarity, 0)
+
+    if coin_cost == 0:
+        await update.message.reply_text('Invalid rarity..')
+        return
 
 async def sell(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     args = context.args
+
 
     if len(args) != 1:
         await update.message.reply_text("Please provide the character ID to sell.")
@@ -36,25 +43,22 @@ async def sell(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text("This character does not exist in your harem.")
         return
 
-    # Check if the character's rarity is in the mapping
-    rarity = character_to_sell.get('rarity', 'Unknown')
-    coins_awarded = rarity_coin_mapping.get(rarity, None)
-    
-    if coins_awarded is None:
-        await update.message.reply_text(f"Sorry ! you Can't sell that Character")
-        return
-
     # Deduct the character from the user's harem
     user['characters'].remove(character_to_sell)
     await user_collection.update_one({'id': user_id}, {'$set': {'characters': user['characters']}})
 
     # Award coins based on rarity
+    coins_awarded = rarity_coin_mapping.get(character_to_sell.get('rarity', 'Unknown'), 0)
+    if coins_awarded == 0:
+        await update.message.reply_text(f"Character {character_id} sold! You received 0 coins because of unknown rarity.")
+        return
+
     if 'balance' in user:
         user['balance'] += coins_awarded
     else:
         user['balance'] = coins_awarded
     await user_collection.update_one({'id': user_id}, {'$set': {'balance': user['balance']}})
-    await update.message.reply_text("Character {character_id} sold! You received {coins_awarded} coins.")
+    await update.message.reply_text(f"Character {character_id} sold! You received {coins_awarded} coins.")
 
 # Inside main(), add this line to register the /sell command handler
 SELL_HANDLER = CommandHandler('sell', sell, block=False)

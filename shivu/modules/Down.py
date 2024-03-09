@@ -1,5 +1,5 @@
-from telegram import Update, ChatMember
-from telegram.ext import CommandHandler, CallbackContext
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 from pymongo import MongoClient
 from shivu import application
 
@@ -24,7 +24,6 @@ async def check_membership(update: Update, context: CallbackContext) -> bool:
             return True
         else:
             return False
-
 
 # Function to handle the /up command
 async def upload(update: Update, context: CallbackContext):
@@ -58,6 +57,7 @@ async def download(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("Image not found.")
 
-# Adding command handlers
-application.add_handler(CommandHandler("down", download))
-application.add_handler(CommandHandler("up", upload))
+
+    application.add_handler(CommandHandler("down", download))
+    application.add_handler(CommandHandler("up", upload))
+    

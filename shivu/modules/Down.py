@@ -57,7 +57,7 @@ async def download(update: Update, context: CallbackContext):
     else:
         await update.message.reply_text("Image not found.")
 
+# Add handlers to the application
+application.add_handler(CommandHandler("down", download))
+application.add_handler(CommandHandler("up", upload))
 
-    application.add_handler(CommandHandler("down", download))
-    application.add_handler(CommandHandler("up", upload))
-    

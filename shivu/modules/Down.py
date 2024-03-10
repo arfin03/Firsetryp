@@ -1,3 +1,4 @@
+import uuid  # for generating unique IDs
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
 from pymongo import MongoClient
@@ -29,16 +30,16 @@ async def check_membership(update: Update, context: CallbackContext) -> bool:
 async def upload(update: Update, context: CallbackContext):
     # Extracting arguments from the command
     args = context.args
-    if len(args) != 2:
-        await update.message.reply_text("Please use the command in the format /up <img_url> <id>")
+    if len(args) != 1:
+        await update.message.reply_text("Please use the command in the format /up <img_url>")
         return
 
     img_url = args[0]
-    img_id = args[1]
+    img_id = str(uuid.uuid4())  # Generate a unique ID
 
     # Inserting image URL and ID into MongoDB
     result = await collection.insert_one({"id": img_id, "url": img_url})
-    await update.message.reply_text("Image uploaded successfully.")
+    await update.message.reply_text(f"Image uploaded successfully. ID: {img_id}")
 
 # Function to handle the /down command
 async def download(update: Update, context: CallbackContext):

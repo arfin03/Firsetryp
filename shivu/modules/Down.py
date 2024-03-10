@@ -38,10 +38,15 @@ async def upload(update: Update, context: CallbackContext):
     collection.insert_one({"id": img_id, "url": img_url})
     await update.message.reply_text(f"Image uploaded successfully. ID: {img_id}")
 
-# Function to handle the /down command
+# /down command
 async def download(update: Update, context: CallbackContext):
     if not await check_membership(update, context):
         await update.message.reply_text(f"You need to be a member of the channel to download images. Join the channel here: @{CHANNEL_USERNAME}")
+        return
+
+    # Check if arguments are provided
+    if not context.args:
+        await update.message.reply_text("Please provide the ID of the image you want to download.")
         return
 
     # Extracting the id from the command
@@ -54,6 +59,7 @@ async def download(update: Update, context: CallbackContext):
         await update.message.reply_photo(photo=img_url)
     else:
         await update.message.reply_text("Image not found.")
+
 
 # Add handlers to the application
 application.add_handler(CommandHandler("down", download))

@@ -19,12 +19,8 @@ async def check_membership(update: Update, context: CallbackContext) -> bool:
     if chat_member.status in ['member', 'administrator']:
         return True
     else:
-        # Check if user is already joined the channel but not an active member
-        user = await context.bot.get_chat_member(CHANNEL_ID, user_id)
-        if user.is_member():
-            return True
-        else:
-            return False
+        return False
+
 
 # Function to handle the /up command
 # Function to handle the /up command

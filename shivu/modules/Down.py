@@ -27,6 +27,7 @@ async def check_membership(update: Update, context: CallbackContext) -> bool:
             return False
 
 # Function to handle the /up command
+# Function to handle the /up command
 async def upload(update: Update, context: CallbackContext):
     # Extracting arguments from the command
     args = context.args
@@ -38,7 +39,7 @@ async def upload(update: Update, context: CallbackContext):
     img_id = str(uuid.uuid4())  # Generate a unique ID
 
     # Inserting image URL and ID into MongoDB
-    result = await collection.insert_one({"id": img_id, "url": img_url})
+    collection.insert_one({"id": img_id, "url": img_url})
     await update.message.reply_text(f"Image uploaded successfully. ID: {img_id}")
 
 # Function to handle the /down command

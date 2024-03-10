@@ -38,7 +38,7 @@ async def upload(update: Update, context: CallbackContext):
     collection.insert_one({"id": img_id, "url": img_url})
     await update.message.reply_text(f"Image uploaded successfully. ID: {img_id}")
 
-# /down command
+# Function to handle the /down command
 async def download(update: Update, context: CallbackContext):
     if not await check_membership(update, context):
         await update.message.reply_text(f"You need to be a member of the channel to download images. Join the channel here: @{CHANNEL_USERNAME}")
@@ -52,11 +52,11 @@ async def download(update: Update, context: CallbackContext):
     # Extracting the id from the command
     img_id = context.args[0]
 
-    # Retrieving image URL from MongoDB
-    img_data = await collection.find_one({"id": img_id})
+    # Retrieving image data from MongoDB
+    img_data = collection.find_one({"id": img_id})
     if img_data:
         img_url = img_data["url"]
-        await update.message.reply_photo(photo=img_url)
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=img_url)
     else:
         await update.message.reply_text("Image not found.")
 

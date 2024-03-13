@@ -16,7 +16,7 @@ app = shivuu
 async def join_watcher(_, message):    
     chat = message.chat
     for members in message.new_chat_members:
-        if members.id == 6786511875:
+        if members.id == app.id:
             count = await app.get_chat_members_count(chat.id)
 
             msg = (
@@ -29,10 +29,8 @@ async def join_watcher(_, message):
                 f"๏ ᴀᴅᴅᴇᴅ ʙʏ ➠ {message.from_user.mention}"
             )
             await app.send_photo(LOG_GROUP_ID, photo=random.choice(photo), caption=msg, reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton(f"↻ ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ ↻", url=f"https://t.me/Dark_waifu_Bot?startgroup=true")]
+            [InlineKeyboardButton(f"THANKS FOR ADD", url=f"")]
          ]))
-
-
 
 @app.on_message(filters.left_chat_member)
 async def on_left_chat_member(_, message: Message):
@@ -45,26 +43,3 @@ async def on_left_chat_member(_, message: Message):
         await app.send_photo(LOG_GROUP_ID, photo=random.choice(photo), caption=left)
 
 #welcome
-
-@app.on_message(filters.new_chat_members, group=3)
-async def _greet(_, message):    
-    chat = message.chat
-    
-    for member in message.new_chat_members:
-        
-            count = await app.get_chat_members_count(chat.id)
-
-            msg = (
-                f"❀ ʜᴇʏ {message.from_user.mention} ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ɢʀᴏᴜᴘ ❀\n\n"
-                
-                f"๏ ɢʀᴏᴜᴘ ɴᴀᴍᴇ ➠ {message.chat.title}\n"
-                f"๏ ɢʀᴏᴜᴘ ᴜsᴇʀɴᴀᴍᴇ ➠ @{message.chat.username}\n"
-                f"๏ ʏᴏᴜʀ ɪᴅ ➠ {member.id}\n"
-                f"๏ ʏᴏᴜʀ ᴜsᴇʀɴᴀᴍᴇ ➠ @{member.username}\n"
-                f"๏ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ᴛᴏᴛᴇʟ {count} ᴍᴇᴍʙᴇʀs"
-            )
-            await app.send_photo(message.chat.id, photo=random.choice(photo), caption=msg, reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton(f"↻ ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ ↻", url=f"https://t.me/Dark_waifu_Bot?startgroup=true")]
-         ]))
-
-        

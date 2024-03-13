@@ -29,7 +29,7 @@ async def join_watcher(_, message):
                 f"๏ ᴀᴅᴅᴇᴅ ʙʏ ➠ {message.from_user.mention}"
             )
             await app.send_photo(LOG_GROUP_ID, photo=random.choice(photo), caption=msg, reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton(f"THANKS FOR ADD", url=f"")]
+            [InlineKeyboardButton(f"ᴀᴅᴅ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴏ", url=f"http://t.me/Dark_waifu_Bot?startgroup=new")]
          ]))
 
 @app.on_message(filters.left_chat_member)

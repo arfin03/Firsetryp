@@ -25,7 +25,6 @@ async def join_watcher(_, message):
                 f"๏ ɢʀᴏᴜᴘ ɴᴀᴍᴇ ➠ {message.chat.title}\n"
                 f"๏ ɢʀᴏᴜᴘ ɪᴅ ➠ {message.chat.id}\n"
                 f"๏ ɢʀᴏᴜᴘ ᴜsᴇʀɴᴀᴍᴇ ➠ @{message.chat.username}\n"
-                f"๏ ɢʀᴏᴜᴘ ʟɪɴᴋ ➠[ʙᴀʙʏ ᴛᴏᴜᴄʜ]({link})\n"
                 f"๏ ɢʀᴏᴜᴘ ᴍᴇᴍʙᴇʀs ➠ {count}\n"
                 f"๏ ᴀᴅᴅᴇᴅ ʙʏ ➠ {message.from_user.mention}"
             )

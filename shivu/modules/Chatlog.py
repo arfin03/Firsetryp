@@ -16,7 +16,7 @@ app = shivuu
 async def join_watcher(_, message):    
     chat = message.chat
     for members in message.new_chat_members:
-        if members.id == app.id:
+        if members.id == 6786511875:
             count = await app.get_chat_members_count(chat.id)
 
             msg = (

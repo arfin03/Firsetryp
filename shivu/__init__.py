@@ -45,7 +45,7 @@ application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)
 db = lol['Character_catcher_new']
-collection = db['anime_characters']
+collection = db['anime_characters_nee']
 user_totals_collection = db['user_totals_2']
 user_collection = db["user_collection_2"]
 group_user_totals_collection = db['group_user_total_2']

@@ -44,7 +44,7 @@ image_urls = [
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)
-db = lol['Character_catcher']
+db = lol['Character_catcher_new']
 collection = db['anime_characters']
 user_totals_collection = db['user_totals_2']
 user_collection = db["user_collection_2"]

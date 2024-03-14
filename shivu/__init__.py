@@ -22,7 +22,7 @@ OWNER_ID = '6655070772'
 sudo_users = ["6655070772", "6090374191", "6655070772", "5297949798", "6417603362", "5955023340"]
 GROUP_ID = "-1002059626060"
 TOKEN = "6786511875:AAGGM-y9P4N3hEjFS6Aj_rYuYt7RAPObVdY"
-mongo_url = "mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority&appName=cluster0"
+mongo_url = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.net/?retryWrites=true&w=majority"
 PHOTO_URL = ["https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg", "https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg"]
 SUPPORT_CHAT = "dark_world_231"
 UPDATE_CHAT = "SUKUNA_UPDATE_CHANNEL"
@@ -44,8 +44,8 @@ image_urls = [
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)
-db = lol['Character_catcher_new']
-collection = db['anime_characters_nee']
+db = lol['Character_catcher']
+collection = db['anime_characters']
 user_totals_collection = db['user_totals_2']
 user_collection = db["user_collection_2"]
 group_user_totals_collection = db['group_user_total_2']

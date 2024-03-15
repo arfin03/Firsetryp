@@ -10,3 +10,4 @@ tgcrypto
 python-dotenv
 cachetools 
 pillow==9.5.0
+telegraph

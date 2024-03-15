@@ -31,6 +31,7 @@ BOT_USERNAME = "Dark_waifu_Bot"
 CHARA_CHANNEL_ID = "-1002059626060"
 api_id = "28062766"
 api_hash = "2087f7a333490600faeb42a9c0267406"
+WORKERS = int(os.environ.get("WORKERS", 8))
 
 image_urls = [
     "https://telegra.ph/file/405ee89d4a708d161a41b.jpg",

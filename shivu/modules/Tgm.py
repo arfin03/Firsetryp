@@ -33,7 +33,7 @@ def ul(_, message):
 
         i.edit(f'Yᴏᴜʀ ʟɪɴᴋ sᴜᴄᴄᴇssғᴜʟ Gᴇɴ `{url}`')
 
-await message.reply_text(
+await message.reply_to_message(
         text,
         disable_web_page_preview=True,
         parse_mode=ParseMode.DEFAULT,

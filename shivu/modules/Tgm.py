@@ -2,6 +2,8 @@ from telegraph import upload_file
 from pyrogram import filters
 from shivu import shivuu
 from pyrogram.types import InputMediaPhoto
+from pyrogram.enums import ParseMode
+
 
 app = shivuu
 

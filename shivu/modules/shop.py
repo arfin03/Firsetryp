@@ -205,7 +205,7 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
 
 app.add_handler("shop:closed", close_shop)
 app.add_handler("shop:back", previous_character)
-app.add_handler(Filters.regex(r'^shop_next_\d+$'), next_character)
+app.add_handler(filters.regex(r'^shop_next_\d+$'), next_character)
 app.add_handler("shop", shop)
 app.add_handler("set", set_price)
-app.add_handler(Filters.regex(r'^buy:\d+$'), buy_character)
+app.add_handler(filters.regex(r'^buy:\d+$'), buy_character)

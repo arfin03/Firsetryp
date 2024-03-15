@@ -203,9 +203,9 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-app.add_handler("shop:closed", close_shop)
-app.add_handler("shop:back", previous_character)
-app.add_handler(filters.regex(r'^shop_next_\d+$'), next_character)
-app.add_handler("shop", shop)
-app.add_handler("set", set_price)
+app.add_handler(CommandHandler("shop", shop))
+app.add_handler(CommandHandler("set", set_price))
 app.add_handler(filters.regex(r'^buy:\d+$'), buy_character)
+app.add_handler(filters.regex(r'^shop_next_\d+$'), next_character)
+app.add_handler(filters.regex(r'^shop:back$'), previous_character)
+app.add_handler(filters.regex(r'^shop:closed$'), close_shop)

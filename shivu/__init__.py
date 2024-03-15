@@ -44,7 +44,7 @@ image_urls = [
 
 
 
-updater = Updater("TOKEN", use_context=True)
+updater = Updater("TOKEN")
 dispatcher = updater.dispatcher
 
 application = Application.builder().token(TOKEN).build()

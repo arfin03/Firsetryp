@@ -41,6 +41,9 @@ image_urls = [
     "https://telegra.ph/file/badce7884ce06e92cedb5.jpg"
 ]
 
+updater = Updater("TOKEN", use_context=True)
+dispatcher = updater.dispatcher
+
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)

@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-from shivu import collection, user_collection, application
+from shivu import collection, user_collection, application, dispatcher
 import logging
 
 async def shop(update: Update, context: CallbackContext) -> None:
@@ -200,11 +200,11 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
+dispatcher.add_handler(CommandHandler("shop", shop))
+dispatcher.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
+dispatcher.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
+dispatcher.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
+dispatcher.add_handler(CommandHandler("set", set_price))
+dispatcher.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
 
-# Add a handler for the 'closed' button
-application.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-application.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-application.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-application.add_handler(CommandHandler("shop", shop, block=False))
-application.add_handler(CommandHandler("set", set_price, block=False))
-application.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
+

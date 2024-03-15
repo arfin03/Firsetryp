@@ -1,7 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-from shivu import collection, user_collection, application, dispatcher
+from shivu import collection, user_collection, application, shivuu
 import logging
+
+app = shivuu
 
 async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -200,11 +202,9 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-dispatcher.add_handler(CommandHandler("shop", shop))
-dispatcher.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-dispatcher.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-dispatcher.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-dispatcher.add_handler(CommandHandler("set", set_price))
-dispatcher.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
-
-
+app.add_handler("shop:closed", close_shop)
+app.add_handler("shop:back", previous_character)
+app.add_handler(Filters.regex(r'^shop_next_\d+$'), next_character)
+app.add_handler("shop", shop)
+app.add_handler("set", set_price)
+app.add_handler(Filters.regex(r'^buy:\d+$'), buy_character)

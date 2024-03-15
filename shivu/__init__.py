@@ -41,6 +41,8 @@ image_urls = [
     "https://telegra.ph/file/badce7884ce06e92cedb5.jpg"
 ]
 
+updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
+
 updater = Updater("TOKEN", use_context=True)
 dispatcher = updater.dispatcher
 

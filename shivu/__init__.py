@@ -44,8 +44,7 @@ image_urls = [
 
 
 
-updater = Updater("TOKEN")
-dispatcher = updater.dispatcher
+
 
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)

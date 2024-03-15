@@ -1,7 +1,8 @@
 import logging  
 import os
 from pyrogram import Client 
-from telegram.ext import Application, tg
+from telegram.ext import Application
+import telegram.ext as tg
 from motor.motor_asyncio import AsyncIOMotorClient
 
 logging.basicConfig(

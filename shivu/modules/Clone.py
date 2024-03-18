@@ -6,10 +6,12 @@ from pyrogram import *
 from pyrogram.types import *
 from random import choice
 from shivu import shivuu
-from shivu import API_ID, API_HASH
 
+
+
+API_HASH = "ec69ce8b56c71541499c914fabd08286"
+API_ID = "25635673"
 ASSUSERNAME = "not allowed"
-
 app = shivuu
 
 IMG = ["https://graph.org/file/1aaff3780b5ba59cb1f63.jpg", "https://graph.org/file/1aaff3780b5ba59cb1f63.jpg", "https://graph.org/file/1aaff3780b5ba59cb1f63.jpg", "https://graph.org/file/1aaff3780b5ba59cb1f63.jpg"]
@@ -38,7 +40,7 @@ async def clone(bot, msg: Message):
     try:
         await text.edit("Booting Your Client")
                    # change this Directry according to ur repo
-        client = Client(name="Melody", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="DAXXMUSIC/plugins"))
+        client = Client(name="Melody", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
         await client.start()
         user = await client.get_me()
         await msg.reply(f"Your Client Has Been Successfully Started As @{user.username}! ✅ \n\n Now Add Your Bot And Assistant @{ASSUSERNAME} To Your Chat!\n\nThanks for Cloning.")

@@ -5,6 +5,7 @@ import time
 from pyrogram import *
 from pyrogram.types import *
 from random import choice
+import shivu
 from shivu import shivuu
 
 API_HASH = "ec69ce8b56c71541499c914fabd08286"

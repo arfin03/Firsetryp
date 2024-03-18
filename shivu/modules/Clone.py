@@ -38,17 +38,24 @@ async def clone(bot, msg: Message):
     text = await msg.reply("Usage:\n\n /clone token")
     cmd = msg.command
     phone = msg.command[1]
-    try:
-        await text.edit("Booting Your Client")
-        # Change this directory according to your repo
-        client = Client(name="Shivu", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
-        print("Client created successfully.")
-        await client.start()
-        user = await client.get_me()
-        await msg.reply(f"Your Client Has Been Successfully Started As @{user.username}! ✅ \n\n Now Add Your Bot And Assistant @{ASSUSERNAME} To Your Chat!\n\nThanks for Cloning.")
-    except Exception as e:
-        print("Error:", e)
-        await msg.reply(f"**ERROR:** `{str(e)}`\nPress /start to Start again.")
+    retries = 3
+    while retries > 0:
+        try:
+            await text.edit("Booting Your Client")
+            # Change this directory according to your repo
+            client = Client(name="Melody", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
+            print("Client created successfully.")
+            await client.start()
+            user = await client.get_me()
+            await msg.reply(f"Your Client Has Been Successfully Started As @{user.username}! ✅ \n\n Now Add Your Bot And Assistant @{ASSUSERNAME} To Your Chat!\n\nThanks for Cloning.")
+            break
+        except Exception as e:
+            print("Error:", e)
+            await asyncio.sleep(1)  # Wait for 1 second before retrying
+            retries -= 1
+            print(f"Retries left: {retries}")
+    else:
+        await msg.reply("Failed to start client after multiple retries. Press /start to try again.")
 
 # Add a debug statement to indicate that the script has started
 print("Script started.")

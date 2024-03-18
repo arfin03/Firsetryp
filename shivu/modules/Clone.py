@@ -40,7 +40,7 @@ async def clone(bot, msg: Message):
     try:
         await text.edit("Booting Your Client")
                    # change this Directry according to ur repo
-        client = Client(name="Melody", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
+        client = Client(name="Shivu", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
         await client.start()
         user = await client.get_me()
         await msg.reply(f"Your Client Has Been Successfully Started As @{user.username}! ✅ \n\n Now Add Your Bot And Assistant @{ASSUSERNAME} To Your Chat!\n\nThanks for Cloning.")

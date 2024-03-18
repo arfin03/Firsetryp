@@ -16,7 +16,7 @@ IMG = ["https://graph.org/file/1aaff3780b5ba59cb1f63.jpg", "https://graph.org/fi
 MESSAGE = "Heya! I'm a music bot hoster/Cloner\n\nI can Host Your Bot On My Server within seconds\n\nTry /clone Token from @botfather"
 
 # Add debugging statements to see if modules are being loaded
-print("Modules to load:", shivuu.modules.__init__)
+print("Modules to load:", shivu.modules.__init__)
 
 @app.on_message(filters.private & filters.command("copy"))
 async def copy(client, message: Message):

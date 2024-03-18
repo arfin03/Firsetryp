@@ -41,7 +41,7 @@ async def clone(bot, msg: Message):
     try:
         await text.edit("Booting Your Client")
         # Change this directory according to your repo
-        client = Client(name="Melody", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
+        client = Client(name="Shivu", api_id=API_ID, api_hash=API_HASH, bot_token=phone, plugins=dict(root="shivu/modules"))
         print("Client created successfully.")
         await client.start()
         user = await client.get_me()

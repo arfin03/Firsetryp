@@ -42,17 +42,22 @@ image_urls = [
     "https://telegra.ph/file/badce7884ce06e92cedb5.jpg"
 ]
 
+DESTINATION_DB_URL = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.net/?retryWrites=true&w=majority"
 
-
+destination_client = MongoClient(DESTINATION_DB_URL)
+destination_db = destination_client['Character_catcher_2007']
+destination_collection = destination_db['user_collection_2008']
+destination_char = db['anime_characters_2007']
 
 
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)
 db = lol['Character_catcher_2007']
-collection = db['anime_characters_2007']
 user_totals_collection = db['user_totals_2007']
-user_collection = db["user_collection_2008"]
 group_user_totals_collection = db['group_user_total_2007']
 top_global_groups_collection = db['top_global_groups_2007']
 pm_users = db['total_pm_users_2007']
+
+user_collection = destination_collection
+collection = destination_char 

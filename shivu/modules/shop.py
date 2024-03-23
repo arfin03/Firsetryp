@@ -4,7 +4,7 @@ from shivu import collection, user_collection, application, shivuu
 import logging
 from pyrogram import Client, filters
 
-app = application 
+dispatcher = application 
 
 async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -203,9 +203,9 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-app.add_handler(CommandHandler("shop", shop))
-app.add_handler(CommandHandler("set", set_price))
-app.add_handler(filters.regex(r'^buy:\d+$'), buy_character)
-app.add_handler(filters.regex(r'^shop_next_\d+$'), next_character)
-app.add_handler(filters.regex(r'^shop:back$'), previous_character)
-app.add_handler(filters.regex(r'^shop:closed$'), close_shop)
+dispatcher.add_handler(CommandHandler("shop", shop))
+dispatcher.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
+dispatcher.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
+dispatcher.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
+dispatcher.add_handler(CommandHandler("set", set_price))
+dispatcher.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))

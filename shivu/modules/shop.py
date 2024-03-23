@@ -4,7 +4,7 @@ from shivu import collection, user_collection, application, shivuu
 import logging
 from pyrogram import Client, filters
 
-app = shivuu
+app = application 
 
 async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)

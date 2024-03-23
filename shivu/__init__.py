@@ -1,7 +1,7 @@
 import logging  
 import os
 from pyrogram import Client 
-from telegram.ext import Application, Updater
+from telegram.ext import Updater
 import telegram.ext as tg
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -46,9 +46,9 @@ DESTINATION_DB_URL = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.ne
 
 
 lol2 = AsyncIOMotorClient(DESTINATION_DB_URL)
-destination_db = destination_client['Character_catcher_2007']
+destination_db = lol2['Character_catcher_2007']
 destination_collection = destination_db['user_collection_2008']
-destination_char = db['anime_characters_2007']
+destination_char = destination_db['anime_characters_2007']
 
 
 application = Application.builder().token(TOKEN).build()
@@ -61,4 +61,4 @@ top_global_groups_collection = db['top_global_groups_2007']
 pm_users = db['total_pm_users_2007']
 
 user_collection = destination_collection
-collection = destination_char 
+collection = destination_char  # Corrected assignment

@@ -208,7 +208,7 @@ dispatcher.add_handler(CommandHandler("shop", shop))
 dispatcher.add_handler(CommandHandler("buy", buy_character))
 
 # Add callback query handlers
-dispatcher.add_handler(CallbackQueryHandler(next_character_callback, pattern=r'^shop_next_\d+$'))
-dispatcher.add_handler(CallbackQueryHandler(close_shop_callback, pattern=r'^shop:closed$'))
-dispatcher.add_handler(CallbackQueryHandler(previous_character_callback, pattern=r'^shop:back$'))
-dispatcher.add_handler(CallbackQueryHandler(buy_character_callback, pattern=r'^buy:\d+$'))
+dispatcher.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
+dispatcher.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
+dispatcher.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
+dispatcher.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))

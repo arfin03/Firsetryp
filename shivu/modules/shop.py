@@ -203,7 +203,6 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-dispatcher.add_handler(CommandHandler("start", start))
 dispatcher.add_handler(CommandHandler("set", set_price_command))
 dispatcher.add_handler(CommandHandler("shop", shop_command))
 dispatcher.add_handler(CommandHandler("buy", buy_character_command))

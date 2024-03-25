@@ -203,9 +203,13 @@ async def previous_character(update: Update, context: CallbackContext) -> None:
         # Update the current_index in user_data
         context.user_data['shop_message']['current_index'] = current_index
 
-dispatcher.add_handler(CommandHandler("shop", shop))
-dispatcher.add_handler(CallbackQueryHandler(next_character, pattern=r'^shop_next_\d+$'))
-dispatcher.add_handler(CallbackQueryHandler(close_shop, pattern=r'^shop:closed$'))
-dispatcher.add_handler(CallbackQueryHandler(previous_character, pattern=r'^shop:back$'))
-dispatcher.add_handler(CommandHandler("set", set_price))
-dispatcher.add_handler(CallbackQueryHandler(buy_character, pattern=r'^buy:\d+$'))
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(CommandHandler("set", set_price_command))
+dispatcher.add_handler(CommandHandler("shop", shop_command))
+dispatcher.add_handler(CommandHandler("buy", buy_character_command))
+
+# Add callback query handlers
+dispatcher.add_handler(CallbackQueryHandler(next_character_callback, pattern=r'^shop_next_\d+$'))
+dispatcher.add_handler(CallbackQueryHandler(close_shop_callback, pattern=r'^shop:closed$'))
+dispatcher.add_handler(CallbackQueryHandler(previous_character_callback, pattern=r'^shop:back$'))
+dispatcher.add_handler(CallbackQueryHandler(buy_character_callback, pattern=r'^buy:\d+$'))

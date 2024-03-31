@@ -25,7 +25,7 @@ GROUP_ID = "-1002059626060"
 TOKEN = "6786511875:AAHqLOSR9zQWKSt-DoW2M4YKaJMMAOcnWMA"
 mongo_url = "mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority"
 PHOTO_URL = ["https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg", "https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg"]
-SUPPORT_CHAT = "dark_world_231"
+SUPPORT_CHAT = "koku_back"
 UPDATE_CHAT = "SUKUNA_UPDATE_CHANNEL"
 BOT_USERNAME = "Dark_waifu_Bot"
 CHARA_CHANNEL_ID = "-1002059626060"

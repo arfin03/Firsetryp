@@ -5,7 +5,7 @@ from shivu import application, top_global_groups_collection, pm_users, OWNER_ID,
 
 
 async def broadcast(update: Update, context: CallbackContext) -> None:
-    OWNER_ID = '6655070772'  # Set the OWNER_ID directly within the function
+    OWNER_ID = '6867197197'  # Set the OWNER_ID directly within the function
 
     if str(update.effective_user.id) == OWNER_ID:
         if update.message.reply_to_message is None:
@@ -44,7 +44,7 @@ async def broadcast(update: Update, context: CallbackContext) -> None:
 
 
 async def broadcast2(update: Update, context: CallbackContext) -> None:
-    OWNER_ID = '6655070772'  # Set the OWNER_ID directly within the function
+    OWNER_ID = '6867197197'  # Set the OWNER_ID directly within the function
 
     if str(update.effective_user.id) == OWNER_ID:
         if update.message.reply_to_message is None:

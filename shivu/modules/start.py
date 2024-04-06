@@ -15,7 +15,7 @@ app = shivuu
 
 collection = db['total_pm_users']
 
-MUST_JOIN = "ALLTYPECC"
+MUST_JOIN = "DARK_DREAM_WORLD"
 
 
 async def start(update: Update, context: CallbackContext) -> None:

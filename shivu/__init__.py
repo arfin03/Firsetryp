@@ -19,8 +19,8 @@ LOGGER = logging.getLogger(__name__)
 from shivu.config import Development as Config
 
 
-OWNER_ID = '6655070772'
-sudo_users = ["6655070772", "6090374191", "6655070772", "5297949798", "6417603362", "5955023340"]
+OWNER_ID = '6867197197'
+sudo_users = ["6867197197", "6090374191", "6655070772", "5297949798", "6417603362", "5955023340"]
 GROUP_ID = "-1002059626060"
 TOKEN = "6786511875:AAHqLOSR9zQWKSt-DoW2M4YKaJMMAOcnWMA"
 mongo_url = "mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority"

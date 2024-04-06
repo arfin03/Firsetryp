@@ -28,6 +28,14 @@ async def start(update: Update, context: CallbackContext) -> None:
 
     user_data = await collection.find_one({"_id": user_id})
 
+    try:
+        if MUST_JOIN:
+            await app.get_chat_member(MUST_JOIN, user_id)
+    except UserNotParticipant:
+        # User has not joined, return without sending the start message
+        return
+
+
     if user_data is None:
         await collection.insert_one({"_id": user_id, "first_name": first_name, "username": username})
 

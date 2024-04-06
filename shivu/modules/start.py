@@ -51,30 +51,27 @@ async def start(update: Update, context: CallbackContext) -> None:
 ***hello i am tg game bot***
         """
         keyboard = [
-            [InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
-            [InlineKeyboardButton("sᴜᴘᴘᴏʀᴛ", url=f'https://t.me/{SUPPORT_CHAT}'),
-             InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help')],
+            [{"text": "ᴀᴅᴅ ᴍᴇ", "url": f'http://t.me/{BOT_USERNAME}?startgroup=new'}],
+            [{"text": "sᴜᴘᴘᴏʀᴛ", "url": f'https://t.me/{SUPPORT_CHAT}'},
+             {"text": "ᴜᴘᴅᴀᴛᴇs", "url": f'https://t.me/{UPDATE_CHAT}'}],
+            [{"text": "ʜᴇʟᴘ", "callback_data": 'help'}],
         ]
-        # Convert reply_markup to JSON serializable format
-        reply_markup_dict = {"inline_keyboard": keyboard}
-        reply_markup_json = json.dumps(reply_markup_dict)
+        reply_markup = json.dumps({"inline_keyboard": keyboard})
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup_json, parse_mode='markdown')
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
 
     else:
         photo_url = random.choice(image_urls)
         keyboard = [
-            [InlineKeyboardButton("sᴜᴘᴘᴏʀᴛ", url=f'https://t.me/{SUPPORT_CHAT}'),
-             InlineKeyboardButton("ᴜᴏᴅᴀᴛᴇs", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
+            [{"text": "sᴜᴘᴘᴏʀᴛ", "url": f'https://t.me/{SUPPORT_CHAT}'},
+             {"text": "ᴜᴏᴅᴀᴛᴇs", "url": f'https://t.me/{UPDATE_CHAT}'}],
+            [{"text": "ᴀᴅᴅ ᴍᴇ", "url": f'http://t.me/{BOT_USERNAME}?startgroup=new'}],
         ]
 
-        # Convert reply_markup to JSON serializable format
-        reply_markup_dict = {"inline_keyboard": keyboard}
-        reply_markup_json = json.dumps(reply_markup_dict)
+        reply_markup = json.dumps({"inline_keyboard": keyboard})
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup_json)
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup)
+
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query

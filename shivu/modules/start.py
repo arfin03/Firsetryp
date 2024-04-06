@@ -6,6 +6,10 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
 
 from shivu import application, db, GROUP_ID, BOT_USERNAME, SUPPORT_CHAT, UPDATE_CHAT, image_urls, shivuu
 
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
+from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
+
 app = shivuu
 
 collection = db['total_pm_users']

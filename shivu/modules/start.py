@@ -1,3 +1,4 @@
+import json
 import random
 from html import escape 
 
@@ -15,6 +16,7 @@ app = shivuu
 collection = db['total_pm_users']
 
 MUST_JOIN = "ALLTYPECC"
+
 
 async def start(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -54,9 +56,11 @@ async def start(update: Update, context: CallbackContext) -> None:
              InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url=f'https://t.me/{UPDATE_CHAT}')],
             [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help')],
         ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        # Convert reply_markup to JSON serializable format
+        reply_markup_dict = {"inline_keyboard": keyboard}
+        reply_markup_json = json.dumps(reply_markup_dict)
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup_json, parse_mode='markdown')
 
     else:
         photo_url = random.choice(image_urls)
@@ -66,8 +70,11 @@ async def start(update: Update, context: CallbackContext) -> None:
             [InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
         ]
 
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup)
+        # Convert reply_markup to JSON serializable format
+        reply_markup_dict = {"inline_keyboard": keyboard}
+        reply_markup_json = json.dumps(reply_markup_dict)
+
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup_json)
 
 async def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -88,7 +95,7 @@ async def button(update: Update, context: CallbackContext) -> None:
 ***/changetime: Cʜᴀɴɢᴇ Cʜᴀʀᴀᴄᴛᴇʀ ᴀᴘᴘᴇᴀʀ ᴛɪᴍᴇ (ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ Gʀᴏᴜᴘs)***
    """
         help_keyboard = [[InlineKeyboardButton("⤾ Bᴀᴄᴋ", callback_data='back')]]
-        reply_markup = InlineKeyboardMarkup(help_keyboard)
+        reply_markup = json.dumps({"inline_keyboard": help_keyboard})
         
         await context.bot.edit_message_caption(chat_id=update.effective_chat.id, message_id=query.message.message_id, caption=help_text, reply_markup=reply_markup, parse_mode='markdown')
 
@@ -107,7 +114,7 @@ async def button(update: Update, context: CallbackContext) -> None:
             InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url=f'https://t.me/{UPDATE_CHAT}')],
             [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help')],
         ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        reply_markup = json.dumps({"inline_keyboard": keyboard})
 
         await context.bot.edit_message_caption(chat_id=update.effective_chat.id, message_id=query.message.message_id, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
 
@@ -144,3 +151,4 @@ async def must_join_channel(app: Client, msg: Message):
 application.add_handler(CallbackQueryHandler(button, pattern='^help$|^back$', block=False))
 start_handler = CommandHandler('start', start, block=False)
 application.add_handler(start_handler)
+

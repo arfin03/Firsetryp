@@ -11,6 +11,7 @@ app = shivuu
 
 user_collection = {}  # Placeholder for user_collection
 
+# Shop command handler
 @app.on_message(filters.command("shop"))
 async def shop_command(_, update):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -34,11 +35,12 @@ async def shop_command(_, update):
     )
 
     # Store data associated with the message using Pyrogram's data attribute
-    await message._pyro_client.set_data('shop_message', {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id})
+    await app.set_data('shop_message', {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id})
 
+# Next character handler
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
-    user_data = await query.message._pyro_client.get_data('shop_message')
+    user_data = await app.get_data('shop_message')
     if user_data is None or user_data['user_id'] != query.from_user.id:
         return
 
@@ -67,7 +69,8 @@ async def next_character(_, query):
 
         # Update the current_index in user_data
         user_data['current_index'] = current_index
-        await query.message._pyro_client.set_data('shop_message', user_data)
+        await app.set_data('shop_message', user_data)
+
         
 # Close shop handler
 @app.on_callback_query(filters.regex(r'shop:closed'))

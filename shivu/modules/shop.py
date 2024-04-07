@@ -2,8 +2,6 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 import logging
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
 from shivu import collection, user_collection, application, shivuu
 import logging
 
@@ -21,22 +19,21 @@ async def shop_command(_, update):
     if not rarity_3_characters:
         await update.reply_text("No legendary characters available in the shop.")
         return
-        
+
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
-    message = await app.send_photo(
-    chat_id=update.chat.id,
-    photo=first_character['img_url'],
-    caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
-            f"🏮Anime Name: {first_character['anime']}\n"
-            f"🎴Character Name: {first_character['name']}\n"
-            f"🌀Rarity: {first_character['rarity']}\n"
-            f"🎗️Character ID: {first_character['id']}\n"
-            f"💸Coin Price: {first_character['coin_price']}",
-    reply_markup=reply_markup  # No need to use write() method here
-)
+    message = await _.send_photo(
+        chat_id=update.chat.id,
+        photo=first_character['img_url'],
+        caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
+                f"🏮Anime Name: {first_character['anime']}\n"
+                f"🎴Character Name: {first_character['name']}\n"
+                f"🌀Rarity: {first_character['rarity']}\n"
+                f"🎗️Character ID: {first_character['id']}\n"
+                f"💸Coin Price: {first_character['coin_price']}",
+        reply_markup=reply_markup
+    )
 
-    
     user_data = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id}
     await _.chat.set_data('shop_message', user_data)
 

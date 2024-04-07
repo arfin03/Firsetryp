@@ -7,7 +7,7 @@ import logging
 
 
 app = shivuu
-
+shop_message_data = {}
 
 user_collection = {}  # Placeholder for user_collection
 
@@ -35,16 +35,16 @@ async def shop_command(_, update):
     )
 
     # Store data associated with the message using Pyrogram's data attribute
-    await app.set_data('shop_message', {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id})
+    shop_message_data[message.message_id] = {'current_index': 0, 'user_id': update.from_user.id}
 
-# Next character handler
+
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
-    user_data = await app.get_data('shop_message')
-    if user_data is None or user_data['user_id'] != query.from_user.id:
+    message_data = shop_message_data.get(query.message.message_id)
+    if message_data is None or message_data['user_id'] != query.from_user.id:
         return
 
-    current_index = user_data.get('current_index', 0)
+    current_index = message_data.get('current_index', 0)
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=700)
 
     if current_index + 1 < len(rarity_3_characters):
@@ -67,10 +67,9 @@ async def next_character(_, query):
             reply_markup=reply_markup
         )
 
-        # Update the current_index in user_data
-        user_data['current_index'] = current_index
-        await app.set_data('shop_message', user_data)
-
+        # Update the current_index in message_data
+        message_data['current_index'] = current_index
+        shop_message_data[query.message.message_id] = message_data
         
 # Close shop handler
 @app.on_callback_query(filters.regex(r'shop:closed'))

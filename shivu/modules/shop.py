@@ -40,7 +40,7 @@ async def shop_command(_, update):
 # Next character handler
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
-    user_data = await _.chat.get_data('shop_message')
+    user_data = await query.message.chat.get_data('shop_message')  # Fix AttributeError here
     if user_data is None or user_data['user_id'] != query.from_user.id:
         return  # Do nothing if user_data is not found or the user is different
 
@@ -69,8 +69,8 @@ async def next_character(_, query):
 
         # Update the current_index in user_data
         user_data['current_index'] = current_index
-        await _.chat.set_data('shop_message', user_data)
-
+        await query.message.chat.set_data('shop_message', user_data)
+        
 # Close shop handler
 @app.on_callback_query(filters.regex(r'shop:closed'))
 async def close_shop(_, query):

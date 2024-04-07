@@ -74,9 +74,9 @@ async def next_character(_, query):
 # Close shop handler
 @app.on_callback_query(filters.regex(r'shop:closed'))
 async def close_shop(_, query):
-    user_data = await _.chat.get_data('shop_message')
+    user_data = await query.message.chat.get_data('shop_message')  # Fix AttributeError here
     if user_data is None:
-        return  # Do nothing if user_data is not found
+        return
 
     message_id = user_data.get('message_id')
     if message_id:
@@ -85,7 +85,8 @@ async def close_shop(_, query):
         except Exception as e:
             logging.error(f"Error deleting message: {e}")
 
-    await _.chat.delete_data('shop_message')
+    await query.message.chat.delete_data('shop_message')
+
 
 # Helper function to generate inline keyboard
 def get_inline_keyboard(character, current_index=0, total_count=7):

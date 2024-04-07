@@ -12,6 +12,7 @@ app = shivuu
 user_collection = {}  # Placeholder for user_collection
 
 # Shop command handler
+# Shop command handler
 @app.on_message(filters.command("shop"))
 async def shop_command(_, update):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -36,6 +37,7 @@ async def shop_command(_, update):
 
     user_data = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id}
     await _.chat.set_data('shop_message', user_data)
+
     
 # Next character handler
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))

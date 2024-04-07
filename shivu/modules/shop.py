@@ -34,8 +34,9 @@ async def shop_command(_, update):
         reply_markup=reply_markup
     )
 
-    # Store data associated with the message using Pyrogram's data attribute
-    shop_message_info = {
+    try:
+        # Store data associated with the message using Pyrogram's data attribute
+        shop_message_info = {
             'chat_id': update.chat.id,
             'message_id': message.message_id,  # Use message_id from the response
             'current_index': 0,
@@ -49,6 +50,7 @@ async def shop_command(_, update):
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
+
 
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):

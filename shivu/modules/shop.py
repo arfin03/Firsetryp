@@ -24,7 +24,7 @@ async def shop_command(_, update):
         
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
-message = await app.send_photo(
+    message = await app.send_photo(
     chat_id=update.chat.id,
     photo=first_character['img_url'],
     caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"

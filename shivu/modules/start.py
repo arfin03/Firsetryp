@@ -1,30 +1,27 @@
-import json
 import random
-from html import escape 
-
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler, CommandHandler
-
-from shivu import application, db, GROUP_ID, BOT_USERNAME, SUPPORT_CHAT, UPDATE_CHAT, image_urls, shivuu
+import json
 
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
 
-app = shivuu
+app = Client("my_bot")
 
 collection = db['total_pm_users']
 
 MUST_JOIN = "DARK_DREAM_WORLD"
 
+@app.on_message(filters.command(["start"]))
+async def start_command(_, message):
+    await start(message)
 
-async def start(update: Update, context: CallbackContext) -> None:
-    user_id = update.effective_user.id
-    first_name = update.effective_user.first_name
-    username = update.effective_user.username
-    chat_id = update.effective_chat.id
-    chat_type = update.effective_chat.type
-    chat_title = update.effective_chat.title  # Get the group's title
+async def start(message):
+    user_id = message.from_user.id
+    first_name = message.from_user.first_name
+    username = message.from_user.username
+    chat_id = message.chat.id
+    chat_type = message.chat.type
+    chat_title = message.chat.title  # Get the group's title
 
     user_data = await collection.find_one({"_id": user_id})
 
@@ -42,8 +39,8 @@ async def start(update: Update, context: CallbackContext) -> None:
         # Send information to the specified group
         if chat_type != "private":
             group_message = f"New user started the bot in group {chat_title} ({chat_id}).\n" \
-                            f"User: <a href='tg://user?id={user_id}'>{escape(first_name)}</a>"
-            await context.bot.send_message(chat_id=GROUP_ID, text=group_message, parse_mode='HTML')
+                            f"User: [{first_name}](tg://user?id={user_id})"
+            await app.send_message(chat_id=GROUP_ID, text=group_message, parse_mode='MarkdownV2')
 
     # Update the existing code below...
     if user_data is not None:
@@ -64,9 +61,9 @@ async def start(update: Update, context: CallbackContext) -> None:
              {"text": "ᴜᴘᴅᴀᴛᴇs", "url": f'https://t.me/{UPDATE_CHAT}'}],
             [{"text": "ʜᴇʟᴘ", "callback_data": 'help'}],
         ]
-        reply_markup = json.dumps({"inline_keyboard": keyboard})
+        reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
+        await app.send_photo(chat_id=message.chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='MarkdownV2')
 
     else:
         photo_url = random.choice(image_urls)
@@ -76,15 +73,19 @@ async def start(update: Update, context: CallbackContext) -> None:
             [{"text": "ᴀᴅᴅ ᴍᴇ", "url": f'http://t.me/{BOT_USERNAME}?startgroup=new'}],
         ]
 
-        reply_markup = json.dumps({"inline_keyboard": keyboard})
+        reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup)
+        await app.send_photo(chat_id=message.chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup)
 
+@app.on_callback_query(filters.regex("^help$"))
+async def help_callback(_, query):
+    await button(query)
 
-async def button(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    await query.answer()
+@app.on_callback_query(filters.regex("^back$"))
+async def back_callback(_, query):
+    await button(query)
 
+async def button(query):
     if query.data == 'help':
         help_text = """
     ***Help Section:***
@@ -100,9 +101,9 @@ async def button(update: Update, context: CallbackContext) -> None:
 ***/changetime: Cʜᴀɴɢᴇ Cʜᴀʀᴀᴄᴛᴇʀ ᴀᴘᴘᴇᴀʀ ᴛɪᴍᴇ (ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ Gʀᴏᴜᴘs)***
    """
         help_keyboard = [[InlineKeyboardButton("⤾ Bᴀᴄᴋ", callback_data='back')]]
-        reply_markup = json.dumps({"inline_keyboard": help_keyboard})
+        reply_markup = InlineKeyboardMarkup(help_keyboard)
         
-        await context.bot.edit_message_caption(chat_id=update.effective_chat.id, message_id=query.message.message_id, caption=help_text, reply_markup=reply_markup, parse_mode='markdown')
+        await query.message.edit_caption(caption=help_text, reply_markup=reply_markup, parse_mode='MarkdownV2')
 
     elif query.data == 'back':
 
@@ -119,12 +120,12 @@ async def button(update: Update, context: CallbackContext) -> None:
             InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url=f'https://t.me/{UPDATE_CHAT}')],
             [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help')],
         ]
-        reply_markup = json.dumps({"inline_keyboard": keyboard})
+        reply_markup = InlineKeyboardMarkup(keyboard)
 
-        await context.bot.edit_message_caption(chat_id=update.effective_chat.id, message_id=query.message.message_id, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
+        await query.message.edit_caption(caption=caption, reply_markup=reply_markup, parse_mode='MarkdownV2')
 
 @app.on_message(filters.incoming & filters.private, group=-1)
-async def must_join_channel(app: Client, msg: Message):
+async def must_join_channel(_, msg):
     if not MUST_JOIN:
         return
     try:
@@ -152,8 +153,4 @@ async def must_join_channel(app: Client, msg: Message):
                 pass
     except ChatAdminRequired:
         print(f"๏ᴘʀᴏᴍᴏᴛᴇ ᴍᴇ ᴀs ᴀɴ ᴀᴅᴍɪɴ ɪɴ ᴛʜᴇ ᴍᴜsᴛ_Jᴏɪɴ ᴄʜᴀᴛ ๏: {MUST_JOIN}")
-
-application.add_handler(CallbackQueryHandler(button, pattern='^help$|^back$', block=False))
-start_handler = CommandHandler('start', start, block=False)
-application.add_handler(start_handler)
 

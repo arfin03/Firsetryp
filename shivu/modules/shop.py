@@ -36,7 +36,7 @@ async def shop_command(_, update):
 
     user_data = {'message_id': message.message_id, 'current_index': 0, 'user_id': update.from_user.id}
     await _.chat.set_data('shop_message', user_data)
-
+    
 # Next character handler
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):

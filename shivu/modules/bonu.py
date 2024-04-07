@@ -6,7 +6,7 @@ from shivu import user_collection, shivuu
 app = shivuu
 
 # Bonus command handler
-@app.on_message(filters.command("bonus"))
+@app.on_message(filters.command("bonus10"))
 async def bonus_command(_, update):
     user_id = update.from_user.id
 
@@ -36,10 +36,10 @@ async def bonus_command(_, update):
     await update.reply_text("You have claimed your weekly bonus of 500 coins!")
 
 # Start command handler (for demonstration purposes)
-@app.on_message(filters.command("start"))
+@app.on_message(filters.command("bonus"))
 async def start_command(_, update):
     # Send a welcome message with the bonus button
-    await update.reply_text("Welcome to the bot! Claim your weekly bonus now.",
+    await update.reply_text("Claim your weekly bonus now.",
                             reply_markup=InlineKeyboardMarkup([
                                 [InlineKeyboardButton("Claim Bonus", callback_data="claim_bonus")]
                             ]))

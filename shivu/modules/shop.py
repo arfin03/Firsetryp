@@ -10,7 +10,7 @@ import logging
 
 app = shivuu
 
-collection = {}  # Placeholder for collection
+
 user_collection = {}  # Placeholder for user_collection
 
 # Shop command handler

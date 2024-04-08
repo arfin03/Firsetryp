@@ -18,6 +18,9 @@ user_collection = {}  # Placeholder for user_collection
 @app.on_message(filters.command("shop"))
 async def shop_command(client, message):
     reply_id = None
+
+    if message.reply_to_message:
+        message_id = message.reply_to_message.message_id
     
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
@@ -45,7 +48,6 @@ async def shop_command(client, message):
         # Store data associated with the message using Pyrogram's data attribute
         shop_message_info = {
             'chat_id': message.chat.id,
-            'message_id': reply_to_message.message_id,  # Access message_id from the sent message
             'current_index': 0,
             'user_id': message.from_user.id
         }

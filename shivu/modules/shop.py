@@ -1,26 +1,18 @@
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 import logging
-
 
 from shivu import collection, user_collection, application, shivuu
-import logging
-
 
 app = shivuu
+shop_message = None  # Global variable to store the most recent shop message
 shop_message_data = {}
-
 
 user_collection = {}  # Placeholder for user_collection
 
-
-
 @app.on_message(filters.command("shop"))
 async def shop_command(client, message):
-    reply_id = None
-
-    if message.reply_to_message:
-        message_id = message.reply_to_message.message_id
+    global shop_message
     
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
@@ -32,7 +24,7 @@ async def shop_command(client, message):
     reply_markup = get_inline_keyboard(first_character)
     
     # Send the photo message and capture the sent message object
-    sent_message = await client.send_photo(
+    shop_message = await client.send_photo(
         chat_id=message.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
@@ -53,19 +45,16 @@ async def shop_command(client, message):
         }
         
         # Update shop_message_data with the message information
-        shop_message_data[sent_message.message_id] = shop_message_info
+        shop_message_data[shop_message.message_id] = shop_message_info
     except Exception as e:
         # Log the error
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await message.reply_text("Sorry, there was an error processing your request. Please try again later.")
 
-
-
-
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
-    message_data = shop_message_data.get(query.message.message_id)
+    message_data = shop_message_data.get(shop_message.message_id)
     if message_data is None or message_data['user_id'] != query.from_user.id:
         return
 
@@ -94,11 +83,11 @@ async def next_character(_, query):
 
         # Update the current_index in message_data
         message_data['current_index'] = current_index
-        shop_message_data[query.message.message_id] = message_data
+        shop_message_data[shop_message.message_id] = message_data
 
 @app.on_callback_query(filters.regex(r'shop:closed'))
 async def close_shop(_, query):
-    message_id = query.message.message_id
+    message_id = shop_message.message_id
     if message_id in shop_message_data:
         del shop_message_data[message_id]
     await query.message.delete() 
@@ -156,3 +145,4 @@ async def buy_character(_, query):
     await user_collection.update_one({'id': user_id}, {'$push': {'characters': character}})
 
     await query.answer(f"You have successfully bought {character['name']} for {coin_price} coins!")
+

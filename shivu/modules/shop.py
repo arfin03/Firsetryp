@@ -14,7 +14,6 @@ user_collection = {}  # Placeholder for user_collection
 
 @app.on_message(filters.command("shop"))
 async def shop_command(_, update):
-    message_id = message.id
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if not rarity_3_characters:
@@ -23,7 +22,9 @@ async def shop_command(_, update):
 
     first_character = rarity_3_characters[0]
     reply_markup = get_inline_keyboard(first_character)
-    message = await _.send_photo(
+    
+    # Send the photo message and capture the sent message object
+    sent_message = await _.send_photo(
         chat_id=update.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
@@ -39,17 +40,19 @@ async def shop_command(_, update):
         # Store data associated with the message using Pyrogram's data attribute
         shop_message_info = {
             'chat_id': update.chat.id,
+            'message_id': sent_message.message_id,  # Access message_id from the sent message
             'current_index': 0,
             'user_id': update.effective_user.id
         }
         
         # Update shop_message_data with the message information
-        shop_message_data[message.message_id] = shop_message_info
+        shop_message_data[sent_message.message_id] = shop_message_info
     except Exception as e:
         # Log the error
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
+
 
 
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))

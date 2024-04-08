@@ -21,7 +21,6 @@ async def shop_command(_, update):
         return
 
     first_character = rarity_3_characters[0]
-    reply_to_message_id=message_id
     reply_markup = get_inline_keyboard(first_character)
     message = await _.send_photo(
         chat_id=update.chat.id,
@@ -44,13 +43,14 @@ async def shop_command(_, update):
             'user_id': update.effective_user.id
         }
         
-        # Update user_data with the message information
+        # Update shop_message_data with the message information
         shop_message_data[message.message_id] = shop_message_info
     except Exception as e:
         # Log the error
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
+
 
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):

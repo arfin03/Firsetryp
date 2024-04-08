@@ -9,6 +9,7 @@ import logging
 app = shivuu
 shop_message_data = {}
 
+
 user_collection = {}  # Placeholder for user_collection
 
 @app.on_message(filters.command("shop"))
@@ -50,8 +51,6 @@ async def shop_command(_, update):
         # Optionally, you can also inform the user about the error
         await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
 
-
-# Callback query handlers
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
     message_data = shop_message_data.get(query.message.message_id)

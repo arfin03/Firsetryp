@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
 import logging
+
 
 from shivu import collection, user_collection, application, shivuu
 import logging

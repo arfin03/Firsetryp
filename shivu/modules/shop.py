@@ -21,6 +21,7 @@ async def shop_command(_, update):
         return
 
     first_character = rarity_3_characters[0]
+    reply_to_message_id=message_id
     reply_markup = get_inline_keyboard(first_character)
     message = await _.send_photo(
         chat_id=update.chat.id,

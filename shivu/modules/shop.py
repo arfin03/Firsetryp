@@ -23,8 +23,8 @@ async def shop_command(_, update):
     reply_markup = get_inline_keyboard(first_character)
     
     # Send the photo message and capture the sent message object
-    shop_message = await client.send_photo(
-        chat_id=message.chat.id,
+   message = await _.send_photo(
+        chat_id=update.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                 f"🏮Anime Name: {first_character['anime']}\n"

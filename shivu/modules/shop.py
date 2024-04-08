@@ -25,7 +25,6 @@ async def shop_command(client, message):
     
     # Send the photo message and capture the sent message object
     shop_message = await client.send_photo(
-        message.chat.id,
         chat_id=message.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
@@ -41,7 +40,7 @@ async def shop_command(client, message):
         # Store data associated with the message using Pyrogram's data attribute
         shop_message_info = {
             'chat_id': update.chat.id,
-            'message_id': message.message_id,  # Use message_id from the response
+            'message_id': chat_id.message_id,  # Use message_id from the response
             'current_index': 0,
             'user_id': update.effective_user.id
         }

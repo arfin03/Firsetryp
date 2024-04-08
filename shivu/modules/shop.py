@@ -13,8 +13,9 @@ shop_message_data = {}
 
 user_collection = {}  # Placeholder for user_collection
 
+
 @app.on_message(filters.command("shop"))
-async def shop_command(client, message: Message, _):
+async def shop_command(client, message, update):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if not rarity_3_characters:
@@ -25,7 +26,7 @@ async def shop_command(client, message: Message, _):
     reply_markup = get_inline_keyboard(first_character)
     
     # Send the photo message and capture the sent message object
-    sent_message = await _.send_photo(
+    sent_message = await client.send_photo(
         chat_id=message.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
@@ -53,6 +54,7 @@ async def shop_command(client, message: Message, _):
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await message.reply_text("Sorry, there was an error processing your request. Please try again later.")
+
 
 
 

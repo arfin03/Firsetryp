@@ -25,6 +25,7 @@ async def shop_command(client, message):
     
     # Send the photo message and capture the sent message object
     shop_message = await client.send_photo(
+        message.chat.id,
         chat_id=message.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
@@ -41,6 +42,7 @@ async def shop_command(client, message):
         shop_message_info = {
             'chat_id': message.chat.id,
             'current_index': 0,
+            'message_id': sent_message.message_id
             'user_id': message.from_user.id
         }
         

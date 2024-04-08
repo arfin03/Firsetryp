@@ -41,7 +41,7 @@ async def shop_command(_, update):
 
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
-    message_data = shop_message_data.get(shop_message.message_id)
+    message_data = shop_message_data.get(message.message_id)
     if message_data is None or message_data['user_id'] != query.from_user.id:
         return
 
@@ -74,7 +74,7 @@ async def next_character(_, query):
 
 @app.on_callback_query(filters.regex(r'shop:closed'))
 async def close_shop(_, query):
-    message_id = shop_message.message_id
+    message_id = message.message_id
     if message_id in shop_message_data:
         del shop_message_data[message_id]
     await query.message.delete() 

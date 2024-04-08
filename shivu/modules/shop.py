@@ -11,7 +11,6 @@ shop_message_data = {}
 
 user_collection = {}  # Placeholder for user_collection
 
-# Shop command handler
 @app.on_message(filters.command("shop"))
 async def shop_command(_, update):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -44,14 +43,14 @@ async def shop_command(_, update):
         }
         
         # Update user_data with the message information
-        context.user_data['shop_message'] = shop_message_info
+        shop_message_data[message.message_id] = shop_message_info
     except Exception as e:
         # Log the error
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
 
-
+# Callback query handlers
 @app.on_callback_query(filters.regex(r'shop_next_\d+'))
 async def next_character(_, query):
     message_data = shop_message_data.get(query.message.message_id)
@@ -84,22 +83,13 @@ async def next_character(_, query):
         # Update the current_index in message_data
         message_data['current_index'] = current_index
         shop_message_data[query.message.message_id] = message_data
-        
-# Close shop handler
+
 @app.on_callback_query(filters.regex(r'shop:closed'))
 async def close_shop(_, query):
-    user_data = await query.message.chat.get_data('shop_message')  # Fix AttributeError here
-    if user_data is None:
-        return
-
-    message_id = user_data.get('message_id')
-    if message_id:
-        try:
-            await query.message.delete()
-        except Exception as e:
-            logging.error(f"Error deleting message: {e}")
-
-    await query.message.chat.delete_data('shop_message')
+    message_id = query.message.message_id
+    if message_id in shop_message_data:
+        del shop_message_data[message_id]
+    await query.message.delete() 
 
 
 # Helper function to generate inline keyboard

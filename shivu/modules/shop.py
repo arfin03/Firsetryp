@@ -15,6 +15,15 @@ user_collection = {}  # Placeholder for user_collection
 async def shop_command(_, update):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
+    try:
+        # Store data associated with the message using Pyrogram's data attribute
+        shop_message_info = {
+            'chat_id': update.chat.id,
+            'message_id': message.message_id,  # Use message_id from the response
+            'current_index': 0,
+            'user_id': update.effective_user.id
+        }
+
     if not rarity_3_characters:
         await update.reply_text("No legendary characters available in the shop.")
         return
@@ -32,15 +41,6 @@ async def shop_command(_, update):
                 f"💸Coin Price: {first_character['coin_price']}",
         reply_markup=reply_markup
     )
-
-    try:
-        # Store data associated with the message using Pyrogram's data attribute
-        shop_message_info = {
-            'chat_id': update.chat.id,
-            'message_id': message.message_id,  # Use message_id from the response
-            'current_index': 0,
-            'user_id': update.effective_user.id
-        }
         
         # Update user_data with the message information
         shop_message_data[message.message_id] = shop_message_info

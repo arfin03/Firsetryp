@@ -14,6 +14,7 @@ shop_message_data = {}
 user_collection = {}  # Placeholder for user_collection
 
 
+
 @app.on_message(filters.command("shop"))
 async def shop_command(client, message):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
@@ -54,7 +55,6 @@ async def shop_command(client, message):
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
         await message.reply_text("Sorry, there was an error processing your request. Please try again later.")
-
 
 
 

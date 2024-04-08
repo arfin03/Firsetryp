@@ -13,7 +13,7 @@ shop_message_data = {}
 user_collection = {}  # Placeholder for user_collection
 
 @app.on_message(filters.command("shop"))
-async def shop_command(_, update):
+async def shop_command(_, update, message):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if not rarity_3_characters:

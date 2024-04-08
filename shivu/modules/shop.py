@@ -39,7 +39,7 @@ async def shop_command(_, update):
         # Store data associated with the message using Pyrogram's data attribute
         shop_message_info = {
             'chat_id': update.chat.id,
-            'message_id': chat_id.message_id,  # Use message_id from the response
+            'message_id': chat.id.message_id,  # Use message_id from the response
             'current_index': 0,
             'user_id': update.effective_user.id
         }

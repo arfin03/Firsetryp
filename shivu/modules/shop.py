@@ -42,7 +42,7 @@ async def shop_command(client, message):
         shop_message_info = {
             'chat_id': message.chat.id,
             'current_index': 0,
-            'message_id': sent_message.message_id
+            'message_id': shop_message.message_id
             'user_id': message.from_user.id
         }
         

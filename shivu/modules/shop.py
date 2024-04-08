@@ -13,11 +13,11 @@ shop_message_data = {}
 user_collection = {}  # Placeholder for user_collection
 
 @app.on_message(filters.command("shop"))
-async def shop_command(_, update, message):
+async def shop_command(_, message):
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     if not rarity_3_characters:
-        await update.reply_text("No legendary characters available in the shop.")
+        await message.reply_text("No legendary characters available in the shop.")
         return
 
     first_character = rarity_3_characters[0]
@@ -25,7 +25,7 @@ async def shop_command(_, update, message):
     
     # Send the photo message and capture the sent message object
     sent_message = await _.send_photo(
-        chat_id=update.chat.id,
+        chat_id=message.chat.id,
         photo=first_character['img_url'],
         caption=f"🪙Welcome to the Shop! Choose a character to buy:\n\n"
                 f"🏮Anime Name: {first_character['anime']}\n"
@@ -39,10 +39,10 @@ async def shop_command(_, update, message):
     try:
         # Store data associated with the message using Pyrogram's data attribute
         shop_message_info = {
-            'chat_id': update.chat.id,
+            'chat_id': message.chat.id,
             'message_id': sent_message.message_id,  # Access message_id from the sent message
             'current_index': 0,
-            'user_id': update.effective_user.id
+            'user_id': message.from_user.id
         }
         
         # Update shop_message_data with the message information
@@ -51,7 +51,8 @@ async def shop_command(_, update, message):
         # Log the error
         logging.error(f"Error in shop function: {e}")
         # Optionally, you can also inform the user about the error
-        await update.reply_text("Sorry, there was an error processing your request. Please try again later.")
+        await message.reply_text("Sorry, there was an error processing your request. Please try again later.")
+
 
 
 

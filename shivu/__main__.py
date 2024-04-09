@@ -291,11 +291,10 @@ async def guess_character(update: Update, context: CallbackContext, character_na
 def main() -> None:
     """Run bot."""
 
-    application.add_handler(CommandHandler("name", handle_name_command, pass_update_queue=True, pass_job_queue=True, pass_user_data=True, pass_chat_data=True, block=False))
+    application.add_handler(CommandHandler("name", handle_name_command, block=False))
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
-
 
    
     application.run_polling(drop_pending_updates=True)

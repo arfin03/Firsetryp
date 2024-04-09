@@ -290,6 +290,7 @@ async def name(update: Update, context: CallbackContext) -> None:
             await app.get_chat_member(MUST_JOIN, user_id)
     except UserNotParticipant:
         # User has not joined, return without sending the start message
+        await update.message.reply_text('Please unlock me to use this command.')
         return
     
     if not context.args:

@@ -14,6 +14,8 @@ from shivu import collection, top_global_groups_collection, group_user_totals_co
 from shivu import application, SUPPORT_CHAT, UPDATE_CHAT, db, LOGGER
 from shivu.modules import ALL_MODULES
 
+MUST_JOIN = "DARK_DREAM_WORLD"
+
 
 locks = {}
 message_counters = {}
@@ -143,7 +145,7 @@ async def send_image(update: Update, context: CallbackContext) -> None:
     await context.bot.send_photo(
         chat_id=chat_id,
         photo=selected_character['img_url'],
-        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem\nTo get the name of this character, use #{character_code}""",
+        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem\nTo get the name of this character, \n\n{character_code}""",
         parse_mode='Markdown'
         )
 
@@ -278,6 +280,13 @@ async def fav(update: Update, context: CallbackContext) -> None:
 async def name(update: Update, context: CallbackContext) -> None:
     if not context.args:
         await update.message.reply_text('Please provide a character code in the format "#XXXXX"')
+        return
+
+    try:
+        if MUST_JOIN:
+            await app.get_chat_member(MUST_JOIN, user_id)
+    except UserNotParticipant:
+        # User has not joined, return without sending the start message
         return
 
     character_code = context.args[0]

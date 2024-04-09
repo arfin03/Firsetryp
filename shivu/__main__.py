@@ -294,7 +294,7 @@ def main() -> None:
     
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
-    application.add_handler(CommandHandler("name", name, pass_args=True, block=False))
+    application.add_handler(CommandHandler("name", name, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
 
    

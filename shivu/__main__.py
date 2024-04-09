@@ -270,6 +270,22 @@ async def fav(update: Update, context: CallbackContext) -> None:
     await user_collection.update_one({'id': user_id}, {'$set': {'favorites': user['favorites']}})
 
     await update.message.reply_text(f'Character {character["name"]} has been added to your favorite...')
+
+async def handle_forwarded_message(update: Update, context: CallbackContext) -> None:
+    # Check if the message is forwarded and from a private chat
+    if update.message.forward_from and update.message.chat.type == Chat.PRIVATE:
+        # Extract character name from the forwarded message
+        character_name = extract_character_name(update.message.text)
+        if character_name:
+            # Call the guess function with the extracted character name
+            await guess_character(update, context, character_name)
+
+async def guess_character(update: Update, context: CallbackContext, character_name: str) -> None:
+    # Simulate guessing the character name
+    # You can call the existing guess function or integrate its logic here
+    # For example:
+    update.message.text = "/guess " + character_name
+    await guess(update, context)
     
 
 
@@ -282,7 +298,8 @@ def main() -> None:
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
-   
+    application.add_handler(MessageHandler(Filters.forwarded & Filters.private, handle_forwarded_message, block=False))
+
 
    
     application.run_polling(drop_pending_updates=True)

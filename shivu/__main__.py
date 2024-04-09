@@ -298,7 +298,7 @@ def main() -> None:
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
-    application.add_handler(MessageHandler(filters._Forwarded() & filters.private, handle_forwarded_message, block=False))
+    application.add_handler(MessageHandler(filters._Forwarded() & filters.private_chat, handle_forwarded_message, block=False))
 
 
 

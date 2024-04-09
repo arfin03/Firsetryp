@@ -283,6 +283,8 @@ async def fav(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(f'Character {character["name"]} has been added to your favorite...')
 
 async def name(update: Update, context: CallbackContext) -> None:
+    user_id = update.effective_user.id
+    
     if not context.args:
         await update.message.reply_text('Please provide a character code in the format "#XXXXX"')
         return

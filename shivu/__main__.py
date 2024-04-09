@@ -136,10 +136,14 @@ async def send_image(update: Update, context: CallbackContext) -> None:
     if chat_id in first_correct_guesses:
         del first_correct_guesses[chat_id]
 
+    # Generate a random code for the selected character
+    character_code = f"#{random.randint(10000, 99999)}"
+    selected_character['code'] = character_code
+
     await context.bot.send_photo(
         chat_id=chat_id,
         photo=selected_character['img_url'],
-        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem""",
+        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem\nTo get the name of this character, use /name and provide the code: {character_code}""",
         parse_mode='Markdown'
         )
 
@@ -271,11 +275,26 @@ async def fav(update: Update, context: CallbackContext) -> None:
 
     await update.message.reply_text(f'Character {character["name"]} has been added to your favorite...')
 
+async def name(update: Update, context: CallbackContext) -> None:
+    if not context.args:
+        await update.message.reply_text('Please provide a character code in the format "#XXXXX"')
+        return
+
+    character_code = context.args[0]
+
+    # Retrieve the character using the provided code
+    character = next((c for c in last_characters.values() if c.get('code') == character_code), None)
+    if character:
+        await update.message.reply_text(f"The name of the character with code {character_code} is {character['name']}")
+    else:
+        await update.message.reply_text(f"No character found with the code {character_code}")
+
 def main() -> None:
     """Run bot."""
     
     application.add_handler(CommandHandler(["guess", "protecc", "collect", "grab", "hunt"], guess, block=False))
     application.add_handler(CommandHandler("fav", fav, block=False))
+    application.add_handler(CommandHandler("name", name, pass_args=True, block=False))
     application.add_handler(MessageHandler(filters.ALL, message_counter, block=False))
 
    
@@ -285,4 +304,3 @@ if __name__ == "__main__":
     shivuu.start()
     LOGGER.info("Bot started")
     main()
-

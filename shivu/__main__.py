@@ -143,7 +143,7 @@ async def send_image(update: Update, context: CallbackContext) -> None:
     await context.bot.send_photo(
         chat_id=chat_id,
         photo=selected_character['img_url'],
-        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem\nTo get the name of this character, use /name and provide the code: {character_code}""",
+        caption=f"""A New {selected_character['rarity']} Character Appeared...\n/guess Character Name and add in Your Harem\nTo get the name of this character, use #{character_code}""",
         parse_mode='Markdown'
         )
 

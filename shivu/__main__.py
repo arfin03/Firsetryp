@@ -272,12 +272,17 @@ async def fav(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(f'Character {character["name"]} has been added to your favorite...')
 
 async def handle_name_command(update: Update, context: CallbackContext) -> None:
-    # Check if the message is a reply and has a valid character name
-    if update.message.reply_to_message and update.message.reply_to_message.text:
-        character_name = extract_character_name(update.message.reply_to_message.text)
+    # Check if the message is a reply to another message
+    if update.message.reply_to_message:
+        # Extract the character name from the replied message
+        character_name = update.message.reply_to_message.text.strip()
+
+        # Check if the replied message contains text
         if character_name:
-            # Call the guess function with the extracted character name
-            await guess_character(update, context, character_name)
+            # Reply to the message with the character's name
+            await update.message.reply_text(f"The character's name is: {character_name}")
+        else:
+            await update.message.reply_text("Sorry, I couldn't find the character's name in the replied message.")
     else:
         await update.message.reply_text("Please reply to a message containing the character's name.")
 

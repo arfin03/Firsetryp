@@ -17,6 +17,7 @@ from shivu.modules import ALL_MODULES
 
 from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
 
+app = shivuu
 
 MUST_JOIN = "DARK_DREAM_WORLD"
 

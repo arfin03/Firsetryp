@@ -300,11 +300,13 @@ async def name(update: Update, context: CallbackContext) -> None:
         return
 
     try:
-        if MUST_JOIN:
+        # Check if the command is used in a group
+        if update.effective_chat.type == 'group':
             await app.get_chat_member(MUST_JOIN, user_id)
     except UserNotParticipant:
         # User has not joined, return without sending the start message
-        return
+        await update.message.reply_text('Please unlock me to use this command.')
+            return
 
     character_code = context.args[0]
 

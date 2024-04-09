@@ -284,18 +284,16 @@ async def fav(update: Update, context: CallbackContext) -> None:
 
 async def name(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
-    
-    if not context.args:
-        await update.message.reply_text('Please provide a character code in the format "#XXXXX"')
-        return
 
     try:
-        # Check if the command is used in a group
-        if update.effective_chat.type == 'group':
+        if MUST_JOIN:
             await app.get_chat_member(MUST_JOIN, user_id)
     except UserNotParticipant:
         # User has not joined, return without sending the start message
-        await update.message.reply_text('Please unlock me to use this command.')
+        return
+    
+    if not context.args:
+        await update.message.reply_text('Please provide a character code in the format "#XXXXX"')
         return
 
     character_code = context.args[0]

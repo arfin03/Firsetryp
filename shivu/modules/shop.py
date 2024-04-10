@@ -3,8 +3,19 @@ from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQ
 from shivu import collection, user_collection, application
 import logging
 
+from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
+
+MUST_JOIN = "dosti_ki_baate"
+
 async def shop(update: Update, context: CallbackContext) -> None:
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
+
+    try:
+        if MUST_JOIN:
+            await app.get_chat_member(MUST_JOIN, user_id)
+    except UserNotParticipant:
+        # User has not joined, return without sending the start message
+        return
 
     if not rarity_3_characters:
         await update.message.reply_text("No legendary characters available in the shop.")

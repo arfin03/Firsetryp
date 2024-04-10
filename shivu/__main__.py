@@ -19,7 +19,7 @@ from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForb
 
 app = shivuu
 
-MUST_JOIN = "DARK_DREAM_WORLD"
+MUST_JOIN = "dosti_ki_baate"
 
 
 locks = {}

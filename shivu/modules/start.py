@@ -18,6 +18,20 @@ collection = db['total_pm_users']
 MUST_JOIN = "DARK_DREAM_WORLD"
 
 
+import random
+
+from telegram import Update
+from telegram.ext import CallbackContext, CommandHandler
+
+from shivu import application, db, GROUP_ID, image_urls, shivuu
+
+app = shivuu
+
+collection = db['total_pm_users']
+
+MUST_JOIN = "DARK_DREAM_WORLD"
+
+
 async def start(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     first_name = update.effective_user.first_name
@@ -34,7 +48,6 @@ async def start(update: Update, context: CallbackContext) -> None:
     except UserNotParticipant:
         # User has not joined, return without sending the start message
         return
-
 
     if user_data is None:
         await collection.insert_one({"_id": user_id, "first_name": first_name, "username": username})
@@ -58,70 +71,13 @@ async def start(update: Update, context: CallbackContext) -> None:
 
 ***hello i am tg game bot***
         """
-        keyboard = [
-            [{"text": "ᴀᴅᴅ ᴍᴇ", "url": f'http://t.me/{BOT_USERNAME}?startgroup=new'}],
-            [{"text": "sᴜᴘᴘᴏʀᴛ", "url": f'https://t.me/{SUPPORT_CHAT}'},
-             {"text": "ᴜᴘᴅᴀᴛᴇs", "url": f'https://t.me/{UPDATE_CHAT}'}],
-            [{"text": "ʜᴇʟᴘ", "callback_data": 'help'}],
-        ]
-        reply_markup = json.dumps({"inline_keyboard": keyboard})
 
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption=caption, parse_mode='markdown')
 
     else:
         photo_url = random.choice(image_urls)
-        keyboard = [
-            [{"text": "sᴜᴘᴘᴏʀᴛ", "url": f'https://t.me/{SUPPORT_CHAT}'},
-             {"text": "ᴜᴏᴅᴀᴛᴇs", "url": f'https://t.me/{UPDATE_CHAT}'}],
-            [{"text": "ᴀᴅᴅ ᴍᴇ", "url": f'http://t.me/{BOT_USERNAME}?startgroup=new'}],
-        ]
 
-        reply_markup = json.dumps({"inline_keyboard": keyboard})
-
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ", reply_markup=reply_markup)
-
-
-async def button(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == 'help':
-        help_text = """
-    ***Help Section:***
-    
-***/guess: Tᴏ Gᴜᴇss ᴄʜᴀʀᴀᴄᴛᴇʀ (ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ ɢʀᴏᴜᴘ)***
-***/fav: Aᴅᴅ Yᴏᴜʀ ғᴀᴠ***
-***/trade : Tᴏ ᴛʀᴀᴅᴇ Cʜᴀʀᴀᴄᴛᴇʀs***
-***/gift: Gɪᴠᴇ ᴀɴʏ Cʜᴀʀᴀᴄᴛᴇʀ ғʀᴏᴍ Yᴏᴜʀ Cᴏʟʟᴇᴄᴛɪᴏɴ ᴛᴏ ᴀɴᴏᴛʜᴇʀ ᴜsᴇʀ.. (ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ ɢʀᴏᴜᴘs)***
-***/collection: Tᴏ sᴇᴇ Yᴏᴜʀ Cᴏʟʟᴇᴄᴛɪᴏɴ***
-***/topgroups : Sᴇᴇ Tᴏᴘ Gʀᴏᴜᴘs.. Pᴘʟ Gᴜᴇssᴇs Mᴏsᴛ ɪɴ ᴛʜᴀᴛ Gʀᴏᴜᴘs***
-***/top: Tᴏᴏ Sᴇᴇ Tᴏᴘ Usᴇʀs***
-***/ctop : Yᴏᴜʀ CʜᴀᴛTᴏᴘ***
-***/changetime: Cʜᴀɴɢᴇ Cʜᴀʀᴀᴄᴛᴇʀ ᴀᴘᴘᴇᴀʀ ᴛɪᴍᴇ (ᴏɴʟʏ ᴡᴏʀᴋs ɪɴ Gʀᴏᴜᴘs)***
-   """
-        help_keyboard = [[InlineKeyboardButton("⤾ Bᴀᴄᴋ", callback_data='back')]]
-        reply_markup = json.dumps({"inline_keyboard": help_keyboard})
-        
-        await context.bot.edit_message_caption(chat_id=update.effective_chat.id, message_id=query.message.message_id, caption=help_text, reply_markup=reply_markup, parse_mode='markdown')
-
-    elif query.data == 'back':
-
-        caption = f"""
-        ***Hoyyyy...*** ✨
-
-***I am An Open Source Character Catcher Bot..​Add Me in Your group.. And I will send Random Characters After.. every 100 messages in Group... Use /guess to.. Collect that Characters in Your Collection.. and see Collection by using /Harem... So add in Your groups and Collect Your harem***
-        """
-
-        
-        keyboard = [
-            [InlineKeyboardButton("ᴀᴅᴅ ᴍᴇ", url=f'http://t.me/{BOT_USERNAME}?startgroup=new')],
-            [InlineKeyboardButton("sᴜᴘᴘᴏʀᴛ", url=f'https://t.me/{SUPPORT_CHAT}'),
-            InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url=f'https://t.me/{UPDATE_CHAT}')],
-            [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help')],
-        ]
-        reply_markup = json.dumps({"inline_keyboard": keyboard})
-
-        await context.bot.edit_message_caption(chat_id=update.effective_chat.id, message_id=query.message.message_id, caption=caption, reply_markup=reply_markup, parse_mode='markdown')
+        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=photo_url, caption="ɪ ᴀᴍ ᴀʟɪᴠᴇ ʙᴀʙʏ")
 
 @app.on_message(filters.incoming & filters.private, group=-1)
 async def must_join_channel(app: Client, msg: Message):
@@ -153,6 +109,5 @@ async def must_join_channel(app: Client, msg: Message):
     except ChatAdminRequired:
         print(f"๏ᴘʀᴏᴍᴏᴛᴇ ᴍᴇ ᴀs ᴀɴ ᴀᴅᴍɪɴ ɪɴ ᴛʜᴇ ᴍᴜsᴛ_Jᴏɪɴ ᴄʜᴀᴛ ๏: {MUST_JOIN}")
 
-application.add_handler(CallbackQueryHandler(button, pattern='^help$|^back$', block=False))
 start_handler = CommandHandler('start', start, block=False)
 application.add_handler(start_handler)

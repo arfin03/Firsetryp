@@ -10,6 +10,8 @@ from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForb
 MUST_JOIN = "dosti_ki_baate"
 
 async def shop(update: Update, context: CallbackContext) -> None:
+    user_id = update.effective_user.id
+
     rarity_3_characters = await collection.find({'rarity': "💸 Premium Edition"}).to_list(length=7)
 
     try:

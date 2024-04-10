@@ -1,7 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-from shivu import collection, user_collection, application
+from shivu import collection, user_collection, application, shivuu
 import logging
+
+app = shivuu
 
 from pyrogram.errors import ChatAdminRequired, UserNotParticipant, ChatWriteForbidden
 

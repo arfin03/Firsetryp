@@ -18,18 +18,7 @@ collection = db['total_pm_users']
 MUST_JOIN = "dosti_ki_baate"
 
 
-import random
 
-from telegram import Update
-from telegram.ext import CallbackContext, CommandHandler
-
-from shivu import application, db, GROUP_ID, image_urls, shivuu
-
-app = shivuu
-
-collection = db['total_pm_users']
-
-MUST_JOIN = "DARK_DREAM_WORLD"
 
 
 async def start(update: Update, context: CallbackContext) -> None:

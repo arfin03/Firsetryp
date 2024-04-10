@@ -15,7 +15,7 @@ app = shivuu
 
 collection = db['total_pm_users']
 
-MUST_JOIN = "DARK_DREAM_WORLD"
+MUST_JOIN = "dosti_ki_baate"
 
 
 import random

@@ -48,7 +48,7 @@ DESTINATION_DB_URL = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.ne
 lol2 = AsyncIOMotorClient(mongo_url)
 destination_db = lol2['Character_catcher_2007']
 destination_collection = destination_db['user_collection_2008']
-destination_char = destination_db['anime_characters_2007']
+destination_char = destination_db['anime_characters']
 
 
 application = Application.builder().token(TOKEN).build()

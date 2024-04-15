@@ -23,7 +23,7 @@ OWNER_ID = '6867197197'
 sudo_users = ["6090374191", "6655070772", "5297949798", "6417603362", "5955023340"]
 GROUP_ID = "-1002059626060"
 TOKEN = "6786511875:AAHqLOSR9zQWKSt-DoW2M4YKaJMMAOcnWMA"
-mongo_url = "mongodb+srv://harshmanjhi180:harsh2279@cluster0.z1pajuv.mongodb.net/?retryWrites=true&w=majority"
+mongo_url = "mongodb+srv://harshmanjhi0001:harsh2279@cluster0.8lgrc9i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 PHOTO_URL = ["https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg", "https://telegra.ph/file/aa06eb4b312f456e1fd28.jpg"]
 SUPPORT_CHAT = "koku_back"
 UPDATE_CHAT = "SUKUNA_UPDATE_CHANNEL"
@@ -46,19 +46,19 @@ DESTINATION_DB_URL = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.ne
 
 
 lol2 = AsyncIOMotorClient(mongo_url)
-destination_db = lol2['Character_catcher_2007']
-destination_collection = destination_db['user_collection_2008']
+destination_db = lol2['Character_catcher']
+destination_collection = destination_db['user_collection']
 destination_char = destination_db['anime_characters']
 
 
 application = Application.builder().token(TOKEN).build()
 shivuu = Client("Shivu", api_id, api_hash, bot_token=TOKEN)
 lol = AsyncIOMotorClient(mongo_url)
-db = lol['Character_catcher_2007']
-user_totals_collection = db['user_totals_2007']
-group_user_totals_collection = db['group_user_total_2007']
-top_global_groups_collection = db['top_global_groups_2007']
-pm_users = db['total_pm_users_2007']
+db = lol['Character_catcher']
+user_totals_collection = db['user_totals']
+group_user_totals_collection = db['group_user_total']
+top_global_groups_collection = db['top_global_groups']
+pm_users = db['total_pm_users']
 
 user_collection = destination_collection
 collection = destination_char  # Corrected assignment

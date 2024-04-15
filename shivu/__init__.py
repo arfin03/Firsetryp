@@ -45,7 +45,7 @@ image_urls = [
 DESTINATION_DB_URL = "mongodb+srv://Komi:Aarught5645@cluster0.8usl8ul.mongodb.net/?retryWrites=true&w=majority"
 
 
-lol2 = AsyncIOMotorClient(DESTINATION_DB_URL)
+lol2 = AsyncIOMotorClient(mongo_url)
 destination_db = lol2['Character_catcher_2007']
 destination_collection = destination_db['user_collection_2008']
 destination_char = destination_db['anime_characters_2007']

@@ -3,7 +3,7 @@ import asyncio
 from telegram.ext import CommandHandler, CallbackContext
 from shivu import user_collection, application 
 
-OWNER_ID = 6867197197
+OWNER_ID = 6995317382
 
 async def katam(update: Update, context: CallbackContext) -> None:
     if update.effective_user.id != OWNER_ID:

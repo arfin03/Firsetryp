@@ -6,7 +6,7 @@ from shivu import user_collection, shivuu
 pending_gifts = {}
 
 # Owner ID
-OWNER_ID = 6867197197
+OWNER_ID = 6995317382
 
 @shivuu.on_message(filters.command("fullgift"))
 async def fullgift(client, message):
